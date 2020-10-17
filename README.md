@@ -1,2 +1,6 @@
-# srs-live
-Flutter live streaming demo.
+# flutter-live
+
+Live streaming demo by Flutter+[SRS](https://github.com/ossrs/srs).
+
+Coming soon...
+
