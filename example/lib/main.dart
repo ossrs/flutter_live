@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_live/flutter_live.dart';
 
+import 'home.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -39,20 +41,14 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       _platformVersion = platformVersion;
+      print('Running on $_platformVersion');
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('SRS: Flutter Live Streaming'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
-      ),
+      home: Home()
     );
   }
 }

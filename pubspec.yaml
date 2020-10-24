@@ -1,5 +1,5 @@
 name: flutter_live
-version: 0.0.2
+version: 1.0.0
 description: Live streaming demo by Flutter+SRS.
 homepage: https://github.com/ossrs/flutter_live
 
@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  fijkplayer: ^0.8.7
 
 dev_dependencies:
   flutter_test:

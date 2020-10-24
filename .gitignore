@@ -21,4 +21,5 @@ doc/api/
 *.js.map
 
 .idea
+.DS_Store
 
