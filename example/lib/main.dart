@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 
 import 'package:flutter_live/flutter_live.dart';
 import 'package:fijkplayer/fijkplayer.dart';
@@ -34,7 +37,24 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  PackageInfo _info = PackageInfo(version: '0.0.0', buildNumber: '0');
   final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _initPlatform();
+  }
+
+  void _initPlatform() async {
+    try {
+      PackageInfo info = await PackageInfo.fromPlatform();
+      setState(() {
+        _info = info;
+      });
+    } catch (e) {
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +119,12 @@ class _HomeState extends State<Home> {
               )
             ],
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('SRS/v${_info.version}+${_info.buildNumber}')
+            ],
+          )
         ],
       ),
     );
