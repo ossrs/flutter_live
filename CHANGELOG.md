@@ -1,8 +1,12 @@
 # Changelog
 
-## 1.0.2, iOS+Android player.
+## 1.0.3
 
-* 2020-10-27,
+* 2020-10-27, Update project informations.
+
+## 1.0.2
+
+* 2020-10-27, iOS+Android player.
 
 ## 1.0.1
 
