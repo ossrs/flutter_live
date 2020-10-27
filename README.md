@@ -2,8 +2,6 @@
 
 Live streaming demo by Flutter+[SRS](https://github.com/ossrs/srs).
 
-> Warning: Not support iOS simulator, [#14647](https://github.com/flutter/flutter/issues/14647).
-
 ## Usage
 
 Install iOS/Android player app from [here](https://ossrs.net), or
@@ -12,6 +10,8 @@ Install iOS/Android player app from [here](https://ossrs.net), or
 git clone https://github.com/ossrs/flutter_live.git &&
 cd flutter_live/example && flutter run
 ```
+
+> Warning: Not support iOS simulator, [#14647](https://github.com/flutter/flutter/issues/14647).
 
 ![Home](https://ossrs.net/srs.release/images/01-home-02.jpg)
 
