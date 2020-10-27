@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.5
+## 1.0.6
 
 * 2020-10-27, Update description.
 * 2020-10-27, Update project information.

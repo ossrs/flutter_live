@@ -6,7 +6,7 @@
 
 跨平台(iOS+Andriod)多协议(RTMP/HTTP-FLV/HLS/WebRTC)直播播放器, Flutter+[SRS](https://github.com/ossrs/srs)。
 
-Live streaming player, multiple platform(iOS+Android), sorts of protocols(RTMP/HTTP-FLV/HLS/WebRTC), by Flutter+[SRS](https://github.com/ossrs/srs).
+Live streaming player, iOS+Android, RTMP/HTTP-FLV/HLS/WebRTC, by Flutter+[SRS](https://github.com/ossrs/srs).
 
 ## Usage
 
