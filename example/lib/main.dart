@@ -106,6 +106,30 @@ class _HomeState extends State<Home> {
               });
             },
           ),
+          RadioListTile(
+            title: Text('HTTPS-FLV'),
+            subtitle: Text(FlutterLive.flvs),
+            value: FlutterLive.flvs,
+            selected: _controller.text == FlutterLive.flvs,
+            groupValue: _controller.text,
+            onChanged: (v) {
+              setState(() {
+                updateUrls(v);
+              });
+            },
+          ),
+          RadioListTile(
+            title: Text('HTTPS-HLS'),
+            subtitle: Text(FlutterLive.hlss),
+            value: FlutterLive.hlss,
+            selected: _controller.text == FlutterLive.hlss,
+            groupValue: _controller.text,
+            onChanged: (v) {
+              setState(() {
+                updateUrls(v);
+              });
+            },
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.7
+
+* 2020-11-06, Add HTTPS-FLV and HTTPS-HLS.
+
 ## 1.0.6
 
 * 2020-10-27, Update description.

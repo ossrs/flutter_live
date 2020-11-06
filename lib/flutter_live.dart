@@ -16,4 +16,6 @@ class FlutterLive {
   static const String rtmp = 'rtmp://r.ossrs.net/live/livestream';
   static const String hls = 'http://r.ossrs.net/live/livestream.m3u8';
   static const String flv = 'http://r.ossrs.net:8080/live/livestream.flv';
+  static const String flvs = 'https://d.ossrs.net:18088/live/livestream.flv';
+  static const String hlss = 'https://d.ossrs.net:18088/live/livestream.m3u8';
 }
