@@ -86,25 +86,25 @@ class DemoUrlsDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      RadioListTile(
-        title: Text('RTMP'), subtitle: Text(FlutterLive.rtmp), value: FlutterLive.rtmp,
-        selected: _url == FlutterLive.rtmp, groupValue: _url, onChanged: _onUrlChanged
+      ListTile(
+          title: Text('RTMP ${FlutterLive.rtmp}'), onTap: () { _onUrlChanged(FlutterLive.rtmp); },
+          leading: Radio(value: FlutterLive.rtmp, groupValue: _url, onChanged: _onUrlChanged)
       ),
-      RadioListTile(
-        title: Text('HLS'), value: FlutterLive.hls, subtitle: Text(FlutterLive.hls),
-        selected: _url == FlutterLive.hls, groupValue: _url, onChanged: _onUrlChanged
+      ListTile(
+          title: Text('HLS ${FlutterLive.hls}'), onTap: () { _onUrlChanged(FlutterLive.hls); },
+          leading: Radio(value: FlutterLive.hls, groupValue: _url, onChanged: _onUrlChanged)
       ),
-      RadioListTile(
-        title: Text('HTTP-FLV'), subtitle: Text(FlutterLive.flv), value: FlutterLive.flv,
-        selected: _url == FlutterLive.flv, groupValue: _url, onChanged: _onUrlChanged
+      ListTile(
+          title: Text('HTTP-FLV ${FlutterLive.flv}'), onTap: () { _onUrlChanged(FlutterLive.flv); },
+          leading: Radio(value: FlutterLive.flv, groupValue: _url, onChanged: _onUrlChanged)
       ),
-      RadioListTile(
-        title: Text('HTTPS-FLV'), subtitle: Text(FlutterLive.flvs), value: FlutterLive.flvs,
-        selected: _url == FlutterLive.flvs, groupValue: _url, onChanged: _onUrlChanged
+      ListTile(
+          title: Text('HTTPS-FLV ${FlutterLive.flvs}'), onTap: () { _onUrlChanged(FlutterLive.flvs); },
+          leading: Radio(value: FlutterLive.flvs, groupValue: _url, onChanged: _onUrlChanged)
       ),
-      RadioListTile(
-        title: Text('HTTPS-HLS'), subtitle: Text(FlutterLive.hlss), value: FlutterLive.hlss,
-        selected: _url == FlutterLive.hlss, groupValue: _url, onChanged: _onUrlChanged
+      ListTile(
+          title: Text('HTTPS-HLS ${FlutterLive.hlss}'), onTap: () { _onUrlChanged(FlutterLive.hlss); },
+          leading: Radio(value: FlutterLive.hlss, groupValue: _url, onChanged: _onUrlChanged)
       ),
     ]);
   }
@@ -119,7 +119,10 @@ class UrlInputDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(controller: _controller, autofocus: false, onChanged: _onUrlChanged);
+    return Container(
+      child: TextField(controller: _controller, autofocus: false, onChanged: _onUrlChanged),
+      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+    );
   }
 }
 
