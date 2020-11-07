@@ -20,14 +20,19 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String _url;
-  PackageInfo _info;
-  _HomeState() {
-    _info = PackageInfo(version: '0.0.0', buildNumber: '0');
-  }
+  PackageInfo _info = PackageInfo(version: '0.0.0', buildNumber: '0');
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
+    _controller.addListener(() {
+      print('edit controller event url=$_url, text=${_controller.text}');
+      if (_url != _controller.text) {
+        setState(() { _url = _controller.text; });
+      }
+    });
 
     PackageInfo.fromPlatform().then((info) {
       setState(() { _info = info; });
@@ -43,7 +48,7 @@ class _HomeState extends State<Home> {
         title: Text('SRS: Flutter Live Streaming'),
       ),
       body: Column(children: [
-        UrlInputDisplay(_url, onUrlChanged),
+        UrlInputDisplay(_controller),
         DemoUrlsDisplay(_url, onUrlChanged),
         ControlDisplay((){ this.startPlay(context); }),
         PlatformDisplay(this._info),
@@ -51,8 +56,17 @@ class _HomeState extends State<Home> {
     );
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
   void onUrlChanged(String v) {
-    setState(() { _url = v; });
+    print('user select $v, url=$_url, text=${_controller.text}');
+    if (_url != v) {
+      setState(() { _controller.text = _url = v; });
+    }
   }
 
   void startPlay(BuildContext context) {
@@ -111,16 +125,13 @@ class DemoUrlsDisplay extends StatelessWidget {
 }
 
 class UrlInputDisplay extends StatelessWidget {
-  final ValueChanged<String> _onUrlChanged;
-  final TextEditingController _controller = TextEditingController();
-  UrlInputDisplay(String url, this._onUrlChanged) {
-    _controller.text = url;
-  }
+  final TextEditingController _controller;
+  UrlInputDisplay(this._controller);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: TextField(controller: _controller, autofocus: false, onChanged: _onUrlChanged),
+      child: TextField(controller: _controller, autofocus: false),
       padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
     );
   }
