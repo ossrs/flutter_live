@@ -7,29 +7,10 @@ import 'package:flutter_live/flutter_live.dart';
 import 'package:fijkplayer/fijkplayer.dart';
 
 void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Home()
-    );
-  }
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Home(),
+  ));
 }
 
 class Home extends StatefulWidget {
@@ -38,23 +19,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  PackageInfo _info = PackageInfo(version: '0.0.0', buildNumber: '0');
-  final TextEditingController _controller = TextEditingController();
+  String _url;
+  PackageInfo _info;
+  _HomeState() {
+    _info = PackageInfo(version: '0.0.0', buildNumber: '0');
+  }
 
   @override
   void initState() {
     super.initState();
-    _initPlatform();
-  }
 
-  void _initPlatform() async {
-    try {
-      PackageInfo info = await PackageInfo.fromPlatform();
-      setState(() {
-        _info = info;
-      });
-    } catch (e) {
-    }
+    PackageInfo.fromPlatform().then((info) {
+      setState(() { _info = info; });
+    }).catchError((e){
+      print('platform error $e');
+    });
   }
 
   @override
@@ -63,113 +42,105 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text('SRS: Flutter Live Streaming'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextField(
-            controller: _controller,
-            autofocus: false,
-          ),
-          RadioListTile(
-            title: Text('RTMP'),
-            subtitle: Text(FlutterLive.rtmp),
-            value: FlutterLive.rtmp,
-            selected: _controller.text == FlutterLive.rtmp,
-            groupValue: _controller.text,
-            onChanged: (v) {
-              setState(() {
-                updateUrls(v);
-              });
-            },
-          ),
-          RadioListTile(
-            title: Text('HLS'),
-            value: FlutterLive.hls,
-            subtitle: Text(FlutterLive.hls),
-            selected: _controller.text == FlutterLive.hls,
-            groupValue: _controller.text,
-            onChanged: (v) {
-              setState(() {
-                updateUrls(v);
-              });
-            },
-          ),
-          RadioListTile(
-            title: Text('HTTP-FLV'),
-            subtitle: Text(FlutterLive.flv),
-            value: FlutterLive.flv,
-            selected: _controller.text == FlutterLive.flv,
-            groupValue: _controller.text,
-            onChanged: (v) {
-              setState(() {
-                updateUrls(v);
-              });
-            },
-          ),
-          RadioListTile(
-            title: Text('HTTPS-FLV'),
-            subtitle: Text(FlutterLive.flvs),
-            value: FlutterLive.flvs,
-            selected: _controller.text == FlutterLive.flvs,
-            groupValue: _controller.text,
-            onChanged: (v) {
-              setState(() {
-                updateUrls(v);
-              });
-            },
-          ),
-          RadioListTile(
-            title: Text('HTTPS-HLS'),
-            subtitle: Text(FlutterLive.hlss),
-            value: FlutterLive.hlss,
-            selected: _controller.text == FlutterLive.hlss,
-            groupValue: _controller.text,
-            onChanged: (v) {
-              setState(() {
-                updateUrls(v);
-              });
-            },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              RaisedButton(
-                child: Text('Play'),
-                onPressed: () {
-                  startPlay(context);
-                },
-              ),
-              Container(
-                width: 10,
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('SRS/v${_info.version}+${_info.buildNumber}')
-            ],
-          )
-        ],
-      ),
+      body: Column(children: [
+        UrlInputDisplay(_url, onUrlChanged),
+        DemoUrlsDisplay(_url, onUrlChanged),
+        ControlDisplay((){ this.startPlay(context); }),
+        PlatformDisplay(this._info),
+      ]),
     );
   }
 
-  void updateUrls(String v) {
-    _controller.text = v;
+  void onUrlChanged(String v) {
+    setState(() { _url = v; });
   }
 
   void startPlay(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return VideoPlayer(url: _controller.text);
+      return VideoPlayer(_url);
     }));
   }
 }
 
-class VideoPlayer extends StatefulWidget {
-  final String url;
+class ControlDisplay extends StatelessWidget {
+  final VoidCallback _onPlayUrl;
+  ControlDisplay(this._onPlayUrl);
 
-  VideoPlayer({@required this.url});
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        RaisedButton(child: Text('Play'), onPressed: _onPlayUrl),
+        Container(width: 10)
+      ],
+    );
+  }
+}
+
+class DemoUrlsDisplay extends StatelessWidget {
+  final String _url;
+  final ValueChanged<String> _onUrlChanged;
+  DemoUrlsDisplay(this._url, this._onUrlChanged);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      RadioListTile(
+        title: Text('RTMP'), subtitle: Text(FlutterLive.rtmp), value: FlutterLive.rtmp,
+        selected: _url == FlutterLive.rtmp, groupValue: _url, onChanged: _onUrlChanged
+      ),
+      RadioListTile(
+        title: Text('HLS'), value: FlutterLive.hls, subtitle: Text(FlutterLive.hls),
+        selected: _url == FlutterLive.hls, groupValue: _url, onChanged: _onUrlChanged
+      ),
+      RadioListTile(
+        title: Text('HTTP-FLV'), subtitle: Text(FlutterLive.flv), value: FlutterLive.flv,
+        selected: _url == FlutterLive.flv, groupValue: _url, onChanged: _onUrlChanged
+      ),
+      RadioListTile(
+        title: Text('HTTPS-FLV'), subtitle: Text(FlutterLive.flvs), value: FlutterLive.flvs,
+        selected: _url == FlutterLive.flvs, groupValue: _url, onChanged: _onUrlChanged
+      ),
+      RadioListTile(
+        title: Text('HTTPS-HLS'), subtitle: Text(FlutterLive.hlss), value: FlutterLive.hlss,
+        selected: _url == FlutterLive.hlss, groupValue: _url, onChanged: _onUrlChanged
+      ),
+    ]);
+  }
+}
+
+class UrlInputDisplay extends StatelessWidget {
+  final ValueChanged<String> _onUrlChanged;
+  final TextEditingController _controller = TextEditingController();
+  UrlInputDisplay(String url, this._onUrlChanged) {
+    _controller.text = url;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(controller: _controller, autofocus: false, onChanged: _onUrlChanged);
+  }
+}
+
+class PlatformDisplay extends StatelessWidget {
+  final PackageInfo _info;
+  PlatformDisplay(this._info);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('SRS/v${_info.version}+${_info.buildNumber}')
+      ],
+    );
+  }
+}
+
+class VideoPlayer extends StatefulWidget {
+  final String _url;
+  VideoPlayer(this._url);
 
   @override
   _VideoPlayerState createState() => _VideoPlayerState();
@@ -186,7 +157,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   }
 
   void startPlay() async {
-    print('Start play ${widget.url}');
+    print('Start play ${widget._url}');
 
     await player.setOption(FijkOption.hostCategory, "request-screen-on", 1);
     await player.setOption(FijkOption.hostCategory, "request-audio-focus", 1);
@@ -201,7 +172,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     await player.setOption(FijkOption.playerCategory, "infbuf", 1); // 1 for realtime.
     await player.setOption(FijkOption.playerCategory, "min-frames", 1); // in frames
 
-    await player.setDataSource(widget.url, autoPlay: true).catchError((e) {
+    await player.setDataSource(widget._url, autoPlay: true).catchError((e) {
       print("setDataSource error: $e");
     });
 
