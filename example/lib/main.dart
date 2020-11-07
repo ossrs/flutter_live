@@ -31,8 +31,10 @@ class _HomeState extends State<Home> {
     _controller.addListener(onUserEditUrl);
 
     PackageInfo.fromPlatform().then((info) {
-      setState(() { _info = info; });
-    }).catchError((e){
+      setState(() {
+        _info = info;
+      });
+    }).catchError((e) {
       print('platform error $e');
     });
   }
@@ -46,7 +48,9 @@ class _HomeState extends State<Home> {
       body: Column(children: [
         UrlInputDisplay(_controller),
         DemoUrlsDisplay(_url, onUseSelectedUrl),
-        ControlDisplay((){ this.startPlay(context); }),
+        ControlDisplay(() {
+          this.startPlay(context);
+        }),
         PlatformDisplay(this._info),
       ]),
     );
@@ -61,14 +65,18 @@ class _HomeState extends State<Home> {
   void onUserEditUrl() {
     print('user edit event url=$_url, text=${_controller.text}');
     if (_url != _controller.text) {
-      setState(() { _url = _controller.text; });
+      setState(() {
+        _url = _controller.text;
+      });
     }
   }
 
   void onUseSelectedUrl(String v) {
     print('user select $v, url=$_url, text=${_controller.text}');
     if (_url != v) {
-      setState(() { _controller.text = _url = v; });
+      setState(() {
+        _controller.text = _url = v;
+      });
     }
   }
 
@@ -104,25 +112,50 @@ class DemoUrlsDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       ListTile(
-          title: Text('RTMP ${FlutterLive.rtmp}'), onTap: () { _onUrlChanged(FlutterLive.rtmp); },
-          leading: Radio(value: FlutterLive.rtmp, groupValue: _url, onChanged: _onUrlChanged)
-      ),
+          title: Text('RTMP ${FlutterLive.rtmp}'),
+          onTap: () {
+            _onUrlChanged(FlutterLive.rtmp);
+          },
+          leading: Radio(
+              value: FlutterLive.rtmp,
+              groupValue: _url,
+              onChanged: _onUrlChanged)),
       ListTile(
-          title: Text('HLS ${FlutterLive.hls}'), onTap: () { _onUrlChanged(FlutterLive.hls); },
-          leading: Radio(value: FlutterLive.hls, groupValue: _url, onChanged: _onUrlChanged)
-      ),
+          title: Text('HLS ${FlutterLive.hls}'),
+          onTap: () {
+            _onUrlChanged(FlutterLive.hls);
+          },
+          leading: Radio(
+              value: FlutterLive.hls,
+              groupValue: _url,
+              onChanged: _onUrlChanged)),
       ListTile(
-          title: Text('HTTP-FLV ${FlutterLive.flv}'), onTap: () { _onUrlChanged(FlutterLive.flv); },
-          leading: Radio(value: FlutterLive.flv, groupValue: _url, onChanged: _onUrlChanged)
-      ),
+          title: Text('HTTP-FLV ${FlutterLive.flv}'),
+          onTap: () {
+            _onUrlChanged(FlutterLive.flv);
+          },
+          leading: Radio(
+              value: FlutterLive.flv,
+              groupValue: _url,
+              onChanged: _onUrlChanged)),
       ListTile(
-          title: Text('HTTPS-FLV ${FlutterLive.flvs}'), onTap: () { _onUrlChanged(FlutterLive.flvs); },
-          leading: Radio(value: FlutterLive.flvs, groupValue: _url, onChanged: _onUrlChanged)
-      ),
+          title: Text('HTTPS-FLV ${FlutterLive.flvs}'),
+          onTap: () {
+            _onUrlChanged(FlutterLive.flvs);
+          },
+          leading: Radio(
+              value: FlutterLive.flvs,
+              groupValue: _url,
+              onChanged: _onUrlChanged)),
       ListTile(
-          title: Text('HTTPS-HLS ${FlutterLive.hlss}'), onTap: () { _onUrlChanged(FlutterLive.hlss); },
-          leading: Radio(value: FlutterLive.hlss, groupValue: _url, onChanged: _onUrlChanged)
-      ),
+          title: Text('HTTPS-HLS ${FlutterLive.hlss}'),
+          onTap: () {
+            _onUrlChanged(FlutterLive.hlss);
+          },
+          leading: Radio(
+              value: FlutterLive.hlss,
+              groupValue: _url,
+              onChanged: _onUrlChanged)),
     ]);
   }
 }
@@ -148,9 +181,7 @@ class PlatformDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text('SRS/v${_info.version}+${_info.buildNumber}')
-      ],
+      children: [Text('SRS/v${_info.version}+${_info.buildNumber}')],
     );
   }
 }
@@ -181,13 +212,20 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
     // Live low-latency: https://www.jianshu.com/p/d6a5d8756eec
     // For all options, read https://github.com/Bilibili/ijkplayer/blob/master/ijkmedia/ijkplayer/ff_ffplay_options.h
-    await player.setOption(FijkOption.formatCategory, "probesize", 16 * 1024); // in bytes
-    await player.setOption(FijkOption.formatCategory, "analyzeduration", 100 * 1000); // in us
-    await player.setOption(FijkOption.playerCategory, "packet-buffering", 0); // 0, no buffer.
-    await player.setOption(FijkOption.playerCategory, "max_cached_duration", 800); // in ms
-    await player.setOption(FijkOption.playerCategory, "max-buffer-size", 32 * 1024); // in bytes
-    await player.setOption(FijkOption.playerCategory, "infbuf", 1); // 1 for realtime.
-    await player.setOption(FijkOption.playerCategory, "min-frames", 1); // in frames
+    await player.setOption(
+        FijkOption.formatCategory, "probesize", 16 * 1024); // in bytes
+    await player.setOption(
+        FijkOption.formatCategory, "analyzeduration", 100 * 1000); // in us
+    await player.setOption(
+        FijkOption.playerCategory, "packet-buffering", 0); // 0, no buffer.
+    await player.setOption(
+        FijkOption.playerCategory, "max_cached_duration", 800); // in ms
+    await player.setOption(
+        FijkOption.playerCategory, "max-buffer-size", 32 * 1024); // in bytes
+    await player.setOption(
+        FijkOption.playerCategory, "infbuf", 1); // 1 for realtime.
+    await player.setOption(
+        FijkOption.playerCategory, "min-frames", 1); // in frames
 
     await player.setDataSource(widget._url, autoPlay: true).catchError((e) {
       print("setDataSource error: $e");
@@ -199,9 +237,11 @@ class _VideoPlayerState extends State<VideoPlayer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('SRS Live Streaming')),
-      body: FijkView(player: player, panelBuilder: fijkPanel2Builder(), fsFit: FijkFit.fill)
-    );
+        appBar: AppBar(title: Text('SRS Live Streaming')),
+        body: FijkView(
+            player: player,
+            panelBuilder: fijkPanel2Builder(),
+            fsFit: FijkFit.fill));
   }
 
   @override

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.9
+
+* 2020-11-07, Refine code, follow https://pub.dev/packages/flutter_live/score
+
 ## 1.0.8
 
 * 2020-11-07, Rewrite the demo, follow https://flutter.dev/docs/development/ui/widgets-intro
