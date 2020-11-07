@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.8
+
+* 2020-11-07, Rewrite the demo, follow https://flutter.dev/docs/development/ui/widgets-intro
+
 ## 1.0.7
 
 * 2020-11-06, Add HTTPS-FLV and HTTPS-HLS.

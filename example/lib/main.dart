@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String _url;
+  String _url; // The final url, should equals to controller.text
   PackageInfo _info = PackageInfo(version: '0.0.0', buildNumber: '0');
   final TextEditingController _controller = TextEditingController();
 
@@ -27,12 +27,8 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    _controller.addListener(() {
-      print('edit controller event url=$_url, text=${_controller.text}');
-      if (_url != _controller.text) {
-        setState(() { _url = _controller.text; });
-      }
-    });
+    _controller.text = _url;
+    _controller.addListener(onUserEditUrl);
 
     PackageInfo.fromPlatform().then((info) {
       setState(() { _info = info; });
@@ -49,7 +45,7 @@ class _HomeState extends State<Home> {
       ),
       body: Column(children: [
         UrlInputDisplay(_controller),
-        DemoUrlsDisplay(_url, onUrlChanged),
+        DemoUrlsDisplay(_url, onUseSelectedUrl),
         ControlDisplay((){ this.startPlay(context); }),
         PlatformDisplay(this._info),
       ]),
@@ -62,7 +58,14 @@ class _HomeState extends State<Home> {
     _controller.dispose();
   }
 
-  void onUrlChanged(String v) {
+  void onUserEditUrl() {
+    print('user edit event url=$_url, text=${_controller.text}');
+    if (_url != _controller.text) {
+      setState(() { _url = _controller.text; });
+    }
+  }
+
+  void onUseSelectedUrl(String v) {
     print('user select $v, url=$_url, text=${_controller.text}');
     if (_url != v) {
       setState(() { _controller.text = _url = v; });
@@ -196,16 +199,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('SRS Live Streaming'),
-        ),
-        body: Container(
-            child: FijkView(
-              player: player,
-              panelBuilder: fijkPanel2Builder(),
-              fsFit: FijkFit.fill,
-            )
-        )
+      appBar: AppBar(title: Text('SRS Live Streaming')),
+      body: FijkView(player: player, panelBuilder: fijkPanel2Builder(), fsFit: FijkFit.fill)
     );
   }
 
