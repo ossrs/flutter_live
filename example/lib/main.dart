@@ -114,18 +114,18 @@ class DemoUrlsDisplay extends StatelessWidget {
             Text('RTMP', style: TextStyle(fontWeight: FontWeight.bold)),
             Text(FlutterLive.rtmp, style: TextStyle(color: Colors.grey[500])),
           ]),
-          onTap: () => _onUrlChanged(FlutterLive.rtmp),
+          onTap: () => _onUrlChanged(FlutterLive.rtmp), contentPadding: EdgeInsets.zero,
           leading: Radio(value: FlutterLive.rtmp, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
           title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('HLS', style: TextStyle(fontWeight: FontWeight.bold)),
             Container(
-              child: Text(FlutterLive.hls, style: TextStyle(color: Colors.grey[500], fontSize: 15)),
+              child: Text(FlutterLive.hls, style: TextStyle(color: Colors.grey[500])),
               padding: EdgeInsets.only(top: 2, bottom: 2),
             ),
           ]),
-          onTap: () => _onUrlChanged(FlutterLive.hls),
+          onTap: () => _onUrlChanged(FlutterLive.hls), contentPadding: EdgeInsets.zero,
           leading: Radio(value: FlutterLive.hls, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
@@ -133,29 +133,29 @@ class DemoUrlsDisplay extends StatelessWidget {
             Text('HTTP-FLV', style: TextStyle(fontWeight: FontWeight.bold)),
             Text(FlutterLive.flv, style: TextStyle(color: Colors.grey[500])),
           ]),
-          onTap: () => _onUrlChanged(FlutterLive.flv),
+          onTap: () => _onUrlChanged(FlutterLive.flv), contentPadding: EdgeInsets.zero,
           leading: Radio(value: FlutterLive.flv, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
           title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('HTTPS-FLV', style: TextStyle(fontWeight: FontWeight.bold)),
             Container(
-              child: Text(FlutterLive.flvs, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+              child: Text(FlutterLive.flvs, style: TextStyle(color: Colors.grey[500], fontSize: 15)),
               padding: EdgeInsets.only(top: 3, bottom:3),
             ),
           ]),
-          onTap: () => _onUrlChanged(FlutterLive.flvs),
+          onTap: () => _onUrlChanged(FlutterLive.flvs), contentPadding: EdgeInsets.zero,
           leading: Radio(value: FlutterLive.flvs, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
           title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('HTTPS-HLS', style: TextStyle(fontWeight: FontWeight.bold)),
             Container(
-              child: Text(FlutterLive.hlss, style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+              child: Text(FlutterLive.hlss, style: TextStyle(color: Colors.grey[500], fontSize: 14)),
               padding: EdgeInsets.only(top: 3, bottom: 3),
             ),
           ]),
-          onTap: () => _onUrlChanged(FlutterLive.hlss),
+          onTap: () => _onUrlChanged(FlutterLive.hlss), contentPadding: EdgeInsets.zero,
           leading: Radio(value: FlutterLive.hlss, groupValue: _url, onChanged: _onUrlChanged),
       ),
     ]);
