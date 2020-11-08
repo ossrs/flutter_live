@@ -95,7 +95,10 @@ class UrlInputDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: TextField(controller: _controller, autofocus: false),
+      child: TextField(
+        controller: _controller, autofocus: false,
+        decoration: InputDecoration(hintText: 'Please select or input url...')
+      ),
       padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
     );
   }
