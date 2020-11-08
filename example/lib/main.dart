@@ -113,45 +113,35 @@ class DemoUrlsDisplay extends StatelessWidget {
     return Column(children: [
       ListTile(
           title: Text('RTMP ${FlutterLive.rtmp}'),
-          onTap: () {
-            _onUrlChanged(FlutterLive.rtmp);
-          },
+          onTap: () => _onUrlChanged(FlutterLive.rtmp),
           leading: Radio(
               value: FlutterLive.rtmp,
               groupValue: _url,
               onChanged: _onUrlChanged)),
       ListTile(
           title: Text('HLS ${FlutterLive.hls}'),
-          onTap: () {
-            _onUrlChanged(FlutterLive.hls);
-          },
+          onTap: () => _onUrlChanged(FlutterLive.hls),
           leading: Radio(
               value: FlutterLive.hls,
               groupValue: _url,
               onChanged: _onUrlChanged)),
       ListTile(
           title: Text('HTTP-FLV ${FlutterLive.flv}'),
-          onTap: () {
-            _onUrlChanged(FlutterLive.flv);
-          },
+          onTap: () => _onUrlChanged(FlutterLive.flv),
           leading: Radio(
               value: FlutterLive.flv,
               groupValue: _url,
               onChanged: _onUrlChanged)),
       ListTile(
           title: Text('HTTPS-FLV ${FlutterLive.flvs}'),
-          onTap: () {
-            _onUrlChanged(FlutterLive.flvs);
-          },
+          onTap: () => _onUrlChanged(FlutterLive.flvs),
           leading: Radio(
               value: FlutterLive.flvs,
               groupValue: _url,
               onChanged: _onUrlChanged)),
       ListTile(
           title: Text('HTTPS-HLS ${FlutterLive.hlss}'),
-          onTap: () {
-            _onUrlChanged(FlutterLive.hlss);
-          },
+          onTap: () => _onUrlChanged(FlutterLive.hlss),
           leading: Radio(
               value: FlutterLive.hlss,
               groupValue: _url,
