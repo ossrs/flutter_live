@@ -2,6 +2,8 @@
 
 ## latest
 
+* 2020-11-08, Disable play button, if url is invalid.
+* 2020-11-08, Refine button, check url before play.
 * 2020-11-08, Refine text layout.
 
 ## 1.0.9

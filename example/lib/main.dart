@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
       body: Column(children: [
         UrlInputDisplay(_controller),
         DemoUrlsDisplay(_url, onUseSelectedUrl),
-        ControlDisplay(() => this.startPlay(context)),
+        ControlDisplay(isUrlValid(), () => this.startPlay(context)),
         PlatformDisplay(this._info),
       ]),
     );
@@ -72,25 +72,31 @@ class _HomeState extends State<Home> {
     }
   }
 
+  bool isUrlValid() {
+    return _url != null && _url.contains('://');
+  }
+
   void startPlay(BuildContext context) {
+    if (!isUrlValid()) {
+      print('Invalid url $_url');
+      return;
+    }
+
     Navigator.push(context, MaterialPageRoute(
         builder: (context) => VideoPlayer(_url))
     );
   }
 }
 
-class ControlDisplay extends StatelessWidget {
-  final VoidCallback _onPlayUrl;
-  ControlDisplay(this._onPlayUrl);
+class UrlInputDisplay extends StatelessWidget {
+  final TextEditingController _controller;
+  UrlInputDisplay(this._controller);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        RaisedButton(child: Text('Play'), onPressed: _onPlayUrl),
-        Container(width: 10)
-      ],
+    return Container(
+      child: TextField(controller: _controller, autofocus: false),
+      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
     );
   }
 }
@@ -156,15 +162,21 @@ class DemoUrlsDisplay extends StatelessWidget {
   }
 }
 
-class UrlInputDisplay extends StatelessWidget {
-  final TextEditingController _controller;
-  UrlInputDisplay(this._controller);
+class ControlDisplay extends StatelessWidget {
+  final bool _urlAvailable;
+  final VoidCallback _onPlayUrl;
+  ControlDisplay(this._urlAvailable, this._onPlayUrl);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TextField(controller: _controller, autofocus: false),
-      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        ElevatedButton(
+          child: Text('Play'), onPressed: _urlAvailable? _onPlayUrl : null,
+        ),
+        Container(width: 10)
+      ],
     );
   }
 }
