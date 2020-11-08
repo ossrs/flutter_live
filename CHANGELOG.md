@@ -2,6 +2,8 @@
 
 ## latest
 
+## 1.0.10
+
 * 2020-11-08, Use hintText for TextField.
 * 2020-11-08, Use ListView for flex items.
 * 2020-11-08, Refine ListTile ui, no padding.

@@ -1,5 +1,5 @@
 name: flutter_live
-version: 1.0.9
+version: 1.0.10
 description: Live streaming player, iOS+Android, RTMP/HTTP-FLV/HLS/WebRTC, by Flutter+SRS.
 homepage: https://github.com/ossrs/flutter_live
 
