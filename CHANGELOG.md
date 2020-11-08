@@ -1,5 +1,9 @@
 # Changelog
 
+## latest
+
+* 2020-11-08, Refine text layout.
+
 ## 1.0.9
 
 * 2020-11-07, Refine code, follow https://pub.dev/packages/flutter_live/score

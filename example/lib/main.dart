@@ -31,9 +31,7 @@ class _HomeState extends State<Home> {
     _controller.addListener(onUserEditUrl);
 
     PackageInfo.fromPlatform().then((info) {
-      setState(() {
-        _info = info;
-      });
+      setState(() { _info = info; });
     }).catchError((e) {
       print('platform error $e');
     });
@@ -48,9 +46,7 @@ class _HomeState extends State<Home> {
       body: Column(children: [
         UrlInputDisplay(_controller),
         DemoUrlsDisplay(_url, onUseSelectedUrl),
-        ControlDisplay(() {
-          this.startPlay(context);
-        }),
+        ControlDisplay(() => this.startPlay(context)),
         PlatformDisplay(this._info),
       ]),
     );
@@ -65,25 +61,21 @@ class _HomeState extends State<Home> {
   void onUserEditUrl() {
     print('user edit event url=$_url, text=${_controller.text}');
     if (_url != _controller.text) {
-      setState(() {
-        _url = _controller.text;
-      });
+      setState(() { _url = _controller.text; });
     }
   }
 
   void onUseSelectedUrl(String v) {
     print('user select $v, url=$_url, text=${_controller.text}');
     if (_url != v) {
-      setState(() {
-        _controller.text = _url = v;
-      });
+      setState(() { _controller.text = _url = v; });
     }
   }
 
   void startPlay(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return VideoPlayer(_url);
-    }));
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context) => VideoPlayer(_url))
+    );
   }
 }
 
@@ -112,40 +104,54 @@ class DemoUrlsDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       ListTile(
-          title: Text('RTMP ${FlutterLive.rtmp}'),
+          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('RTMP', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(FlutterLive.rtmp, style: TextStyle(color: Colors.grey[500])),
+          ]),
           onTap: () => _onUrlChanged(FlutterLive.rtmp),
-          leading: Radio(
-              value: FlutterLive.rtmp,
-              groupValue: _url,
-              onChanged: _onUrlChanged)),
+          leading: Radio(value: FlutterLive.rtmp, groupValue: _url, onChanged: _onUrlChanged),
+      ),
       ListTile(
-          title: Text('HLS ${FlutterLive.hls}'),
+          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('HLS', style: TextStyle(fontWeight: FontWeight.bold)),
+            Container(
+              child: Text(FlutterLive.hls, style: TextStyle(color: Colors.grey[500], fontSize: 15)),
+              padding: EdgeInsets.only(top: 2, bottom: 2),
+            ),
+          ]),
           onTap: () => _onUrlChanged(FlutterLive.hls),
-          leading: Radio(
-              value: FlutterLive.hls,
-              groupValue: _url,
-              onChanged: _onUrlChanged)),
+          leading: Radio(value: FlutterLive.hls, groupValue: _url, onChanged: _onUrlChanged),
+      ),
       ListTile(
-          title: Text('HTTP-FLV ${FlutterLive.flv}'),
+          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('HTTP-FLV', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(FlutterLive.flv, style: TextStyle(color: Colors.grey[500])),
+          ]),
           onTap: () => _onUrlChanged(FlutterLive.flv),
-          leading: Radio(
-              value: FlutterLive.flv,
-              groupValue: _url,
-              onChanged: _onUrlChanged)),
+          leading: Radio(value: FlutterLive.flv, groupValue: _url, onChanged: _onUrlChanged),
+      ),
       ListTile(
-          title: Text('HTTPS-FLV ${FlutterLive.flvs}'),
+          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('HTTPS-FLV', style: TextStyle(fontWeight: FontWeight.bold)),
+            Container(
+              child: Text(FlutterLive.flvs, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+              padding: EdgeInsets.only(top: 3, bottom:3),
+            ),
+          ]),
           onTap: () => _onUrlChanged(FlutterLive.flvs),
-          leading: Radio(
-              value: FlutterLive.flvs,
-              groupValue: _url,
-              onChanged: _onUrlChanged)),
+          leading: Radio(value: FlutterLive.flvs, groupValue: _url, onChanged: _onUrlChanged),
+      ),
       ListTile(
-          title: Text('HTTPS-HLS ${FlutterLive.hlss}'),
+          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('HTTPS-HLS', style: TextStyle(fontWeight: FontWeight.bold)),
+            Container(
+              child: Text(FlutterLive.hlss, style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+              padding: EdgeInsets.only(top: 3, bottom: 3),
+            ),
+          ]),
           onTap: () => _onUrlChanged(FlutterLive.hlss),
-          leading: Radio(
-              value: FlutterLive.hlss,
-              groupValue: _url,
-              onChanged: _onUrlChanged)),
+          leading: Radio(value: FlutterLive.hlss, groupValue: _url, onChanged: _onUrlChanged),
+      ),
     ]);
   }
 }
@@ -202,20 +208,13 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
     // Live low-latency: https://www.jianshu.com/p/d6a5d8756eec
     // For all options, read https://github.com/Bilibili/ijkplayer/blob/master/ijkmedia/ijkplayer/ff_ffplay_options.h
-    await player.setOption(
-        FijkOption.formatCategory, "probesize", 16 * 1024); // in bytes
-    await player.setOption(
-        FijkOption.formatCategory, "analyzeduration", 100 * 1000); // in us
-    await player.setOption(
-        FijkOption.playerCategory, "packet-buffering", 0); // 0, no buffer.
-    await player.setOption(
-        FijkOption.playerCategory, "max_cached_duration", 800); // in ms
-    await player.setOption(
-        FijkOption.playerCategory, "max-buffer-size", 32 * 1024); // in bytes
-    await player.setOption(
-        FijkOption.playerCategory, "infbuf", 1); // 1 for realtime.
-    await player.setOption(
-        FijkOption.playerCategory, "min-frames", 1); // in frames
+    await player.setOption(FijkOption.formatCategory, "probesize", 16 * 1024); // in bytes
+    await player.setOption(FijkOption.formatCategory, "analyzeduration", 100 * 1000); // in us
+    await player.setOption(FijkOption.playerCategory, "packet-buffering", 0); // 0, no buffer.
+    await player.setOption(FijkOption.playerCategory, "max_cached_duration", 800); // in ms
+    await player.setOption(FijkOption.playerCategory, "max-buffer-size", 32 * 1024); // in bytes
+    await player.setOption(FijkOption.playerCategory, "infbuf", 1); // 1 for realtime.
+    await player.setOption(FijkOption.playerCategory, "min-frames", 1); // in frames
 
     await player.setDataSource(widget._url, autoPlay: true).catchError((e) {
       print("setDataSource error: $e");
@@ -228,10 +227,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('SRS Live Streaming')),
-        body: FijkView(
-            player: player,
-            panelBuilder: fijkPanel2Builder(),
-            fsFit: FijkFit.fill));
+        body: FijkView(player: player, panelBuilder: fijkPanel2Builder(), fsFit: FijkFit.fill),
+    );
   }
 
   @override
