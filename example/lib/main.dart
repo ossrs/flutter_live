@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text('SRS: Flutter Live Streaming'),
       ),
-      body: Column(children: [
+      body: ListView(children: [
         UrlInputDisplay(_controller),
         DemoUrlsDisplay(_url, onUseSelectedUrl),
         ControlDisplay(isUrlValid(), () => this.startPlay(context)),
@@ -110,12 +110,12 @@ class DemoUrlsDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       ListTile(
-          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('RTMP', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(FlutterLive.rtmp, style: TextStyle(color: Colors.grey[500])),
-          ]),
-          onTap: () => _onUrlChanged(FlutterLive.rtmp), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: FlutterLive.rtmp, groupValue: _url, onChanged: _onUrlChanged),
+        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('RTMP', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(FlutterLive.rtmp, style: TextStyle(color: Colors.grey[500])),
+        ]),
+        onTap: () => _onUrlChanged(FlutterLive.rtmp), contentPadding: EdgeInsets.zero,
+        leading: Radio(value: FlutterLive.rtmp, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
           title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
