@@ -2,6 +2,8 @@
 
 ## latest
 
+* 2020-11-09, Refine code, remove dead codes.
+
 ## 1.0.10
 
 * 2020-11-08, Use hintText for TextField.
