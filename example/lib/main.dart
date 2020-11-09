@@ -7,10 +7,7 @@ import 'package:flutter_live/flutter_live.dart';
 import 'package:fijkplayer/fijkplayer.dart';
 
 void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: Home(),
-  ));
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: Home()));
 }
 
 class Home extends StatefulWidget {
@@ -40,9 +37,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('SRS: Flutter Live Streaming'),
-      ),
+      appBar: AppBar(title: Text('SRS: Flutter Live Streaming')),
       body: ListView(children: [
         UrlInputDisplay(_controller),
         DemoUrlsDisplay(_url, onUseSelectedUrl),
