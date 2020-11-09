@@ -27,4 +27,9 @@ class FlutterLive {
 
   /// HTTPS-HLS demo stream by https://ossrs.net/
   static const String hlss = 'https://d.ossrs.net:18088/live/livestream.m3u8';
+
+  /// The constructor for flutter live.
+  FlutterLive() {
+  }
 }
+
