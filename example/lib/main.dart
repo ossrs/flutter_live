@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 
-import 'package:flutter_live/flutter_live.dart';
+import 'package:flutter_live/flutter_live.dart' as flutter_live;
 import 'package:fijkplayer/fijkplayer.dart';
 
 void main() {
@@ -114,56 +114,56 @@ class DemoUrlsDisplay extends StatelessWidget {
       ListTile(
         title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('RTMP', style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(FlutterLive.rtmp, style: TextStyle(color: Colors.grey[500])),
+          Text(flutter_live.FlutterLive.rtmp, style: TextStyle(color: Colors.grey[500])),
         ]),
-        onTap: () => _onUrlChanged(FlutterLive.rtmp), contentPadding: EdgeInsets.zero,
-        leading: Radio(value: FlutterLive.rtmp, groupValue: _url, onChanged: _onUrlChanged),
+        onTap: () => _onUrlChanged(flutter_live.FlutterLive.rtmp), contentPadding: EdgeInsets.zero,
+        leading: Radio(value: flutter_live.FlutterLive.rtmp, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
           title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('HLS', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(FlutterLive.hls, style: TextStyle(color: Colors.grey[500])),
+            Text(flutter_live.FlutterLive.hls, style: TextStyle(color: Colors.grey[500])),
           ]),
-          onTap: () => _onUrlChanged(FlutterLive.hls), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: FlutterLive.hls, groupValue: _url, onChanged: _onUrlChanged),
+          onTap: () => _onUrlChanged(flutter_live.FlutterLive.hls), contentPadding: EdgeInsets.zero,
+          leading: Radio(value: flutter_live.FlutterLive.hls, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
         title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('HTTP-FLV', style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(FlutterLive.flv, style: TextStyle(color: Colors.grey[500])),
+          Text(flutter_live.FlutterLive.flv, style: TextStyle(color: Colors.grey[500])),
         ]),
-        onTap: () => _onUrlChanged(FlutterLive.flv), contentPadding: EdgeInsets.zero,
-        leading: Radio(value: FlutterLive.flv, groupValue: _url, onChanged: _onUrlChanged),
+        onTap: () => _onUrlChanged(flutter_live.FlutterLive.flv), contentPadding: EdgeInsets.zero,
+        leading: Radio(value: flutter_live.FlutterLive.flv, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
         title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('WebRTC', style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(FlutterLive.rtc, style: TextStyle(color: Colors.grey[500], fontSize: 15)),
+          Text(flutter_live.FlutterLive.rtc, style: TextStyle(color: Colors.grey[500], fontSize: 15)),
         ]),
-        onTap: () => _onUrlChanged(FlutterLive.rtc), contentPadding: EdgeInsets.zero,
-        leading: Radio(value: FlutterLive.rtc, groupValue: _url, onChanged: _onUrlChanged),
+        onTap: () => _onUrlChanged(flutter_live.FlutterLive.rtc), contentPadding: EdgeInsets.zero,
+        leading: Radio(value: flutter_live.FlutterLive.rtc, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
           title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('HTTPS-FLV', style: TextStyle(fontWeight: FontWeight.bold)),
             Container(
-              child: Text(FlutterLive.flvs, style: TextStyle(color: Colors.grey[500], fontSize: 15)),
+              child: Text(flutter_live.FlutterLive.flvs, style: TextStyle(color: Colors.grey[500], fontSize: 15)),
               padding: EdgeInsets.only(top: 3, bottom:3),
             ),
           ]),
-          onTap: () => _onUrlChanged(FlutterLive.flvs), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: FlutterLive.flvs, groupValue: _url, onChanged: _onUrlChanged),
+          onTap: () => _onUrlChanged(flutter_live.FlutterLive.flvs), contentPadding: EdgeInsets.zero,
+          leading: Radio(value: flutter_live.FlutterLive.flvs, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
           title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('HTTPS-HLS', style: TextStyle(fontWeight: FontWeight.bold)),
             Container(
-              child: Text(FlutterLive.hlss, style: TextStyle(color: Colors.grey[500], fontSize: 14)),
+              child: Text(flutter_live.FlutterLive.hlss, style: TextStyle(color: Colors.grey[500], fontSize: 14)),
               padding: EdgeInsets.only(top: 3, bottom: 3),
             ),
           ]),
-          onTap: () => _onUrlChanged(FlutterLive.hlss), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: FlutterLive.hlss, groupValue: _url, onChanged: _onUrlChanged),
+          onTap: () => _onUrlChanged(flutter_live.FlutterLive.hlss), contentPadding: EdgeInsets.zero,
+          leading: Radio(value: flutter_live.FlutterLive.hlss, groupValue: _url, onChanged: _onUrlChanged),
       ),
     ]);
   }
@@ -210,7 +210,7 @@ class LiveStreamingPlayer extends StatefulWidget {
 }
 
 class _LiveStreamingPlayerState extends State<LiveStreamingPlayer> {
-  final RealtimePlayer _player = RealtimePlayer(FijkPlayer());
+  final flutter_live.RealtimePlayer _player = flutter_live.RealtimePlayer(FijkPlayer());
 
   @override
   void initState() {
