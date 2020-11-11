@@ -2,6 +2,7 @@
 
 ## latest
 
+* 2020-11-11, Extract RealtimePlayer for low-latency live streaming.
 * 2020-11-09, Refine code, remove dead codes.
 
 ## 1.0.10
