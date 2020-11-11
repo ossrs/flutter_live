@@ -223,8 +223,8 @@ class _LiveStreamingPlayerState extends State<LiveStreamingPlayer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('SRS Live Streaming')),
-        body: FijkView(player: _player.fijk, panelBuilder: fijkPanel2Builder(), fsFit: FijkFit.fill),
+      appBar: AppBar(title: Text('SRS Live Streaming')),
+      body: FijkView(player: _player.fijk, panelBuilder: fijkPanel2Builder(), fsFit: FijkFit.fill),
     );
   }
 
