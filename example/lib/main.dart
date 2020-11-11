@@ -76,7 +76,13 @@ class _HomeState extends State<Home> {
     }
 
     Navigator.push(context, MaterialPageRoute(
-        builder: (context) => VideoPlayer(_url))
+        builder: (context) {
+          if (!_url.startsWith('webrtc://')) {
+            return LiveStreamingPlayer(_url);
+          } else {
+            return WebRTCStreamingPlayer(_url);
+          }
+        })
     );
   }
 }
@@ -116,21 +122,26 @@ class DemoUrlsDisplay extends StatelessWidget {
       ListTile(
           title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('HLS', style: TextStyle(fontWeight: FontWeight.bold)),
-            Container(
-              child: Text(FlutterLive.hls, style: TextStyle(color: Colors.grey[500])),
-              padding: EdgeInsets.only(top: 2, bottom: 2),
-            ),
+            Text(FlutterLive.hls, style: TextStyle(color: Colors.grey[500])),
           ]),
           onTap: () => _onUrlChanged(FlutterLive.hls), contentPadding: EdgeInsets.zero,
           leading: Radio(value: FlutterLive.hls, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
-          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('HTTP-FLV', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(FlutterLive.flv, style: TextStyle(color: Colors.grey[500])),
-          ]),
-          onTap: () => _onUrlChanged(FlutterLive.flv), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: FlutterLive.flv, groupValue: _url, onChanged: _onUrlChanged),
+        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('HTTP-FLV', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(FlutterLive.flv, style: TextStyle(color: Colors.grey[500])),
+        ]),
+        onTap: () => _onUrlChanged(FlutterLive.flv), contentPadding: EdgeInsets.zero,
+        leading: Radio(value: FlutterLive.flv, groupValue: _url, onChanged: _onUrlChanged),
+      ),
+      ListTile(
+        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('WebRTC', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(FlutterLive.rtc, style: TextStyle(color: Colors.grey[500], fontSize: 15)),
+        ]),
+        onTap: () => _onUrlChanged(FlutterLive.rtc), contentPadding: EdgeInsets.zero,
+        leading: Radio(value: FlutterLive.rtc, groupValue: _url, onChanged: _onUrlChanged),
       ),
       ListTile(
           title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -190,58 +201,67 @@ class PlatformDisplay extends StatelessWidget {
   }
 }
 
-class VideoPlayer extends StatefulWidget {
+class LiveStreamingPlayer extends StatefulWidget {
   final String _url;
-  VideoPlayer(this._url);
+  LiveStreamingPlayer(this._url);
 
   @override
-  _VideoPlayerState createState() => _VideoPlayerState();
+  _LiveStreamingPlayerState createState() => _LiveStreamingPlayerState();
 }
 
-class _VideoPlayerState extends State<VideoPlayer> {
-  final FijkPlayer player = FijkPlayer();
+class _LiveStreamingPlayerState extends State<LiveStreamingPlayer> {
+  final RealtimePlayer _player = RealtimePlayer(FijkPlayer());
 
   @override
   void initState() {
     super.initState();
-    player.setOption(FijkOption.playerCategory, "mediacodec-all-videos", 1);
-    startPlay();
-  }
-
-  void startPlay() async {
-    print('Start play ${widget._url}');
-
-    await player.setOption(FijkOption.hostCategory, "request-screen-on", 1);
-    await player.setOption(FijkOption.hostCategory, "request-audio-focus", 1);
-
-    // Live low-latency: https://www.jianshu.com/p/d6a5d8756eec
-    // For all options, read https://github.com/Bilibili/ijkplayer/blob/master/ijkmedia/ijkplayer/ff_ffplay_options.h
-    await player.setOption(FijkOption.formatCategory, "probesize", 16 * 1024); // in bytes
-    await player.setOption(FijkOption.formatCategory, "analyzeduration", 100 * 1000); // in us
-    await player.setOption(FijkOption.playerCategory, "packet-buffering", 0); // 0, no buffer.
-    await player.setOption(FijkOption.playerCategory, "max_cached_duration", 800); // in ms
-    await player.setOption(FijkOption.playerCategory, "max-buffer-size", 32 * 1024); // in bytes
-    await player.setOption(FijkOption.playerCategory, "infbuf", 1); // 1 for realtime.
-    await player.setOption(FijkOption.playerCategory, "min-frames", 1); // in frames
-
-    await player.setDataSource(widget._url, autoPlay: true).catchError((e) {
-      print("setDataSource error: $e");
-    });
-
-    player.enterFullScreen();
+    _player.initState();
+    // Auto start play live streaming.
+    _player.play(widget._url);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('SRS Live Streaming')),
-        body: FijkView(player: player, panelBuilder: fijkPanel2Builder(), fsFit: FijkFit.fill),
+        body: FijkView(player: _player.fijk, panelBuilder: fijkPanel2Builder(), fsFit: FijkFit.fill),
     );
   }
 
   @override
   void dispose() {
     super.dispose();
-    player.release();
+    _player.dispose();
   }
 }
+
+class WebRTCStreamingPlayer extends StatefulWidget {
+  final String _url;
+  WebRTCStreamingPlayer(this._url);
+
+  @override
+  State<StatefulWidget> createState() => _WebRTCStreamingPlayerState();
+}
+
+class _WebRTCStreamingPlayerState extends State<WebRTCStreamingPlayer> {
+  @override
+  void initState() {
+    super.initState();
+    startPlay();
+  }
+
+  void startPlay() async {
+    print('start play WebRTC streaming ${widget._url}');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return null;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+}
+
