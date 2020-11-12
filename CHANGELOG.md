@@ -2,6 +2,7 @@
 
 ## latest
 
+* 2020-11-12, Support WebRTC streaming play.
 * 2020-11-11, Use package to isolate live and rtc.
 * 2020-11-11, Extract RealtimePlayer for low-latency live streaming.
 * 2020-11-09, Refine code, remove dead codes.

@@ -6,6 +6,12 @@ PODS:
   - Flutter (1.0.0)
   - flutter_live (0.0.1):
     - Flutter
+  - flutter_webrtc (0.2.2):
+    - Flutter
+    - GoogleWebRTC (= 1.1.31999)
+    - Libyuv (= 1703)
+  - GoogleWebRTC (1.1.31999)
+  - Libyuv (1703)
   - package_info (0.0.1):
     - Flutter
 
@@ -13,11 +19,14 @@ DEPENDENCIES:
   - fijkplayer (from `.symlinks/plugins/fijkplayer/ios`)
   - Flutter (from `Flutter`)
   - flutter_live (from `.symlinks/plugins/flutter_live/ios`)
+  - flutter_webrtc (from `.symlinks/plugins/flutter_webrtc/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
 
 SPEC REPOS:
   trunk:
     - BIJKPlayer
+    - GoogleWebRTC
+    - Libyuv
 
 EXTERNAL SOURCES:
   fijkplayer:
@@ -26,6 +35,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_live:
     :path: ".symlinks/plugins/flutter_live/ios"
+  flutter_webrtc:
+    :path: ".symlinks/plugins/flutter_webrtc/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
 
@@ -34,8 +45,11 @@ SPEC CHECKSUMS:
   fijkplayer: 0c8728bf3b222203e1fddb08f6899719d88b2b6d
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_live: efecc5d284c5a3721d436eebd5ea4322eef31a08
+  flutter_webrtc: 39898454258b54ba51996850d5da8d5d53bf1524
+  GoogleWebRTC: b39a78c4f5cc6b0323415b9233db03a2faa7b0f0
+  Libyuv: 5f79ced0ee66e60a612ca97de1e6ccacd187a437
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
 
-PODFILE CHECKSUM: a75497545d4391e2d394c3668e20cfb1c2bbd4aa
+PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
 
 COCOAPODS: 1.9.3

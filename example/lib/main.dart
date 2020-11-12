@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 
 import 'package:flutter_live/flutter_live.dart' as flutter_live;
-import 'package:fijkplayer/fijkplayer.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
+import 'package:fijkplayer/fijkplayer.dart' as fijkplayer;
 
 void main() {
   runApp(MaterialApp(debugShowCheckedModeBanner: false, home: Home()));
@@ -210,21 +211,27 @@ class LiveStreamingPlayer extends StatefulWidget {
 }
 
 class _LiveStreamingPlayerState extends State<LiveStreamingPlayer> {
-  final flutter_live.RealtimePlayer _player = flutter_live.RealtimePlayer(FijkPlayer());
+  final flutter_live.RealtimePlayer _player = flutter_live.RealtimePlayer(fijkplayer.FijkPlayer());
 
   @override
   void initState() {
     super.initState();
     _player.initState();
+    autoPlay();
+  }
+
+  void autoPlay() async {
     // Auto start play live streaming.
-    _player.play(widget._url);
+    await _player.play(widget._url);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('SRS Live Streaming')),
-      body: FijkView(player: _player.fijk, panelBuilder: fijkPanel2Builder(), fsFit: FijkFit.fill),
+      body: fijkplayer.FijkView(
+        player: _player.fijk, panelBuilder: fijkplayer.fijkPanel2Builder(), fsFit: fijkplayer.FijkFit.fill
+      ),
     );
   }
 
@@ -244,24 +251,44 @@ class WebRTCStreamingPlayer extends StatefulWidget {
 }
 
 class _WebRTCStreamingPlayerState extends State<WebRTCStreamingPlayer> {
+  final webrtc.RTCVideoRenderer _video = webrtc.RTCVideoRenderer();
+  final flutter_live.WebRTCPlayer _player = flutter_live.WebRTCPlayer();
+
   @override
   void initState() {
     super.initState();
-    startPlay();
+    _player.initState();
+    autoPlay();
   }
 
-  void startPlay() async {
-    print('start play WebRTC streaming ${widget._url}');
+  void autoPlay() async {
+    await _video.initialize();
+
+    // Render stream when got remote stream.
+    _player.onRemoteStream = (webrtc.MediaStream stream) {
+      _video.srcObject = stream;
+    };
+
+    // Auto start play WebRTC streaming.
+    await _player.play(widget._url);
   }
 
   @override
   Widget build(BuildContext context) {
-    return null;
+    return Scaffold(
+      appBar: AppBar(title: Text('SRS WebRTC Streaming')),
+      body: Container(
+        child: webrtc.RTCVideoView(_video),
+        decoration: BoxDecoration(color: Colors.grey[500]),
+      ),
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
+    _video.dispose();
+    _player.dispose();
   }
 }
 
