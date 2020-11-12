@@ -33,8 +33,9 @@ class FlutterLive {
   static const String hlss = 'https://d.ossrs.net:18088/live/livestream.m3u8';
 
   /// WebRTC demo stream by https://ossrs.net/
-  //static const String rtc = 'webrtc://d.ossrs.net:11985/live/livestream';
-  static const String rtc = 'webrtc://30.27.140.150/live/livestream';
+  static const String rtc = 'webrtc://d.ossrs.net:11985/live/livestream';
+  //static const String rtc = 'webrtc://30.27.140.150/live/livestream';
+  //static const String rtc = 'webrtc://30.27.140.150/live/livestream?encrypt=false';
   //static const String rtc = 'webrtc://192.168.3.8/live/livestream';
 
   /// The constructor for flutter live.
@@ -167,10 +168,15 @@ class WebRTCPlayer {
       await _pc.close();
     }
 
+    // Create the peer connection.
     _pc = await webrtc.createPeerConnection({
       // AddTransceiver is only available with Unified Plan SdpSemantics
       'sdpSemantics': "unified-plan"
     });
+
+    print('WebRTC: createPeerConnection done');
+
+    // Setup the peer connection.
     _pc.onAddStream = (stream) {
       print('WebRTC: got stream ${stream.id}');
       if (_onRemoteStream == null) {
@@ -179,7 +185,6 @@ class WebRTCPlayer {
       }
       _onRemoteStream(stream);
     };
-    print('WebRTC: createPeerConnection done');
 
     _pc.addTransceiver(
         kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeAudio,
@@ -190,7 +195,8 @@ class WebRTCPlayer {
       init: webrtc.RTCRtpTransceiverInit(direction: webrtc.TransceiverDirection.RecvOnly),
     );
     print('WebRTC: Setup PC done, A|V RecvOnly');
-    
+
+    // Start SDP handshake.
     webrtc.RTCSessionDescription offer = await _pc.createOffer({
       'mandatory': {'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true},
     });

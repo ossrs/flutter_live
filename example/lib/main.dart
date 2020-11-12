@@ -230,7 +230,8 @@ class _LiveStreamingPlayerState extends State<LiveStreamingPlayer> {
     return Scaffold(
       appBar: AppBar(title: Text('SRS Live Streaming')),
       body: fijkplayer.FijkView(
-        player: _player.fijk, panelBuilder: fijkplayer.fijkPanel2Builder(), fsFit: fijkplayer.FijkFit.fill
+        player: _player.fijk, panelBuilder: fijkplayer.fijkPanel2Builder(),
+        fsFit: fijkplayer.FijkFit.fill
       ),
     );
   }
