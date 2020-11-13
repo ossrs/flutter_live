@@ -252,6 +252,7 @@ class WebRTCStreamingPlayer extends StatefulWidget {
 }
 
 class _WebRTCStreamingPlayerState extends State<WebRTCStreamingPlayer> {
+  bool _loudspeaker = true;
   final webrtc.RTCVideoRenderer _video = webrtc.RTCVideoRenderer();
   final flutter_live.WebRTCPlayer _player = flutter_live.WebRTCPlayer();
 
@@ -267,7 +268,8 @@ class _WebRTCStreamingPlayerState extends State<WebRTCStreamingPlayer> {
 
     // Render stream when got remote stream.
     _player.onRemoteStream = (webrtc.MediaStream stream) {
-      _video.srcObject = stream;
+      // @remark It's very important to use setState to set the srcObject and notify render.
+      setState(() { _video.srcObject = stream; });
     };
 
     // Auto start play WebRTC streaming.
@@ -278,11 +280,16 @@ class _WebRTCStreamingPlayerState extends State<WebRTCStreamingPlayer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('SRS WebRTC Streaming')),
-      body: Container(
-        child: webrtc.RTCVideoView(_video),
-        decoration: BoxDecoration(color: Colors.grey[500]),
-      ),
+      body: GestureDetector(onTap: _switchLoudspeaker, child: Container(
+        child: webrtc.RTCVideoView(_video), decoration: BoxDecoration(color: Colors.grey[500])
+      )),
     );
+  }
+
+  void _switchLoudspeaker() {
+    print('setSpeakerphoneOn: $_loudspeaker(${_loudspeaker? "Loudspeaker":"Earpiece"})');
+    flutter_live.FlutterLive.setSpeakerphoneOn(_loudspeaker);
+    _loudspeaker = !_loudspeaker;
   }
 
   @override

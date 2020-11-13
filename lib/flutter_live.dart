@@ -17,6 +17,12 @@ class FlutterLive {
     return version;
   }
 
+  /// Set the speaker phone on.
+  // [enabled] Use Earpiece if false, or Loudspeaker if true.
+  static Future<void> setSpeakerphoneOn(bool enabled) async {
+    await _channel.invokeMethod('setSpeakerphoneOn', <String, dynamic>{'enabled': enabled});
+  }
+
   /// RTMP demo stream by https://ossrs.net/
   static const String rtmp = 'rtmp://r.ossrs.net/live/livestream';
 
@@ -34,9 +40,6 @@ class FlutterLive {
 
   /// WebRTC demo stream by https://ossrs.net/
   static const String rtc = 'webrtc://d.ossrs.net:11985/live/livestream';
-  //static const String rtc = 'webrtc://30.27.140.150/live/livestream';
-  //static const String rtc = 'webrtc://30.27.140.150/live/livestream?encrypt=false';
-  //static const String rtc = 'webrtc://192.168.3.8/live/livestream';
 
   /// The constructor for flutter live.
   FlutterLive() {
@@ -177,7 +180,7 @@ class WebRTCPlayer {
     print('WebRTC: createPeerConnection done');
 
     // Setup the peer connection.
-    _pc.onAddStream = (stream) {
+    _pc.onAddStream = (webrtc.MediaStream stream) {
       print('WebRTC: got stream ${stream.id}');
       if (_onRemoteStream == null) {
         print('Warning: Stream ${stream.id} is leak');
@@ -203,13 +206,14 @@ class WebRTCPlayer {
     await _pc.setLocalDescription(offer);
     print('WebRTC: createOffer, ${offer.type} is ${offer.sdp.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
 
-    String answer = await handshake(url, offer.sdp);
-    print('WebRTC: got answer is ${answer.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
+    webrtc.RTCSessionDescription answer = await _handshake(url, offer.sdp);
+    print('WebRTC: got ${answer.type} is ${answer.sdp.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
 
-    await _pc.setRemoteDescription(new webrtc.RTCSessionDescription(answer, 'answer'));
+    await _pc.setRemoteDescription(answer);
   }
 
-  Future<String> handshake(String url, String offer) async {
+  /// Handshake to exchange SDP, send offer and got answer.
+  Future<webrtc.RTCSessionDescription> _handshake(String url, String offer) async {
     // Setup the client for HTTP or HTTPS.
     HttpClient client = HttpClient();
 
@@ -241,7 +245,7 @@ class WebRTCPlayer {
         return Future.error(reply);
       }
 
-      return Future.value(o['sdp']);
+      return Future.value(webrtc.RTCSessionDescription(o['sdp'], 'answer'));
     } finally {
       client.close();
     }

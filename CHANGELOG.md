@@ -2,6 +2,9 @@
 
 ## latest
 
+## 1.0.11
+
+* 2020-11-12, Support setSpeakerphoneOn.
 * 2020-11-12, Support WebRTC streaming play.
 * 2020-11-11, Use package to isolate live and rtc.
 * 2020-11-11, Extract RealtimePlayer for low-latency live streaming.
