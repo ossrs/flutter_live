@@ -39,7 +39,8 @@ class FlutterLive {
   static const String hlss = 'https://d.ossrs.net:18088/live/livestream.m3u8';
 
   /// WebRTC demo stream by https://ossrs.net/
-  static const String rtc = 'webrtc://d.ossrs.net:11985/live/livestream';
+  //static const String rtc = 'webrtc://d.ossrs.net:11985/live/livestream';
+  static const String rtc = 'webrtc://pull.rtcdemo.grtn.aliyunlive.com/app/livestream';
 
   /// The constructor for flutter live.
   FlutterLive() {
@@ -110,6 +111,8 @@ class WebRTCUri {
   String api;
   /// The stream url to play or publish.
   String streamUrl;
+  // Whether url schema is Alibaba Cloud GRTN.
+  bool grtn = false;
 
   /// Parse the url to WebRTC uri.
   static WebRTCUri parse(String url) {
@@ -130,6 +133,14 @@ class WebRTCUri {
       api = uri.queryParameters['play'];
     }
 
+    // For Alibaba Cloud GRTN.
+    var grtn = false;
+    if (uri.queryParameters.containsKey('grtn') || uri.host.startsWith('push.') || uri.host.startsWith('pull.')) {
+      api = uri.path;
+      port = schema=='http'? 80 : 443;
+      grtn = true;
+    }
+
     var apiParams = [];
     for (var key in uri.queryParameters.keys) {
       if (key != 'api' && key != 'play' && key != 'schema') {
@@ -145,7 +156,8 @@ class WebRTCUri {
     WebRTCUri r = WebRTCUri();
     r.api = apiUrl;
     r.streamUrl = url;
-    print('Url ${url} parsed to api=${r.api}, stream=${r.streamUrl}');
+    r.grtn = grtn;
+    print('Url ${url} parsed to api=${r.api}, stream=${r.streamUrl}, grtn=${r.grtn}');
     return r;
   }
 }
@@ -225,15 +237,19 @@ class WebRTCPlayer {
       WebRTCUri uri = WebRTCUri.parse(url);
 
       // Do signaling for WebRTC.
-      // @see https://github.com/rtcdn/rtcdn-draft
-      //
-      // POST http://d.ossrs.net:11985/rtc/v1/play/
-      //    {api: "xxx", sdp: "offer", streamurl: "webrtc://d.ossrs.net:11985/live/livestream"}
-      // Response:
-      //    {code: 0, sdp: "answer", sessionid: "007r51l7:X2Lv"}
       HttpClientRequest req = await client.postUrl(Uri.parse(uri.api));
       req.headers.set('Content-Type', 'application/json');
-      req.add(utf8.encode(json.encode({'api': uri.api, 'streamurl': uri.streamUrl, 'sdp': offer})));
+      if (uri.grtn) {
+        // For Alibaba Cloud GRTN.
+        req.add(utf8.encode(json.encode({'version':2, 'sdk_version':'0.0.1', 'mode':'rtc',
+          'push_stream': uri.streamUrl.replaceAll('webrtc://', 'artc://'), 'jsep': {'type': 'offer', 'sdp': offer}
+        })));
+      } else {
+        // @see https://github.com/rtcdn/rtcdn-draft
+        // Requst: POST http://d.ossrs.net:11985/rtc/v1/play/
+        //    {api: "xxx", sdp: "offer", streamurl: "webrtc://d.ossrs.net:11985/live/livestream"}
+        req.add(utf8.encode(json.encode({'api': uri.api, 'streamurl': uri.streamUrl, 'sdp': offer})));
+      }
       print('WebRTC request: ${uri.api} offer=${offer.length}B');
 
       HttpClientResponse res = await req.close();
@@ -241,11 +257,23 @@ class WebRTCPlayer {
       print('WebRTC reply: ${reply.length}B, ${res.statusCode}');
 
       Map<String, dynamic> o = json.decode(reply);
-      if (!o.containsKey('code') || !o.containsKey('sdp') || o['code'] != 0) {
-        return Future.error(reply);
-      }
+      if (uri.grtn) {
+        // For Alibaba Cloud GRTN.
+        if (!o.containsKey('code') || !o.containsKey('jsep') || (o['code'] != 0 && o['code'] != 200)) {
+          return Future.error(reply);
+        }
 
-      return Future.value(webrtc.RTCSessionDescription(o['sdp'], 'answer'));
+        return Future.value(webrtc.RTCSessionDescription(o['jsep']['sdp'], 'answer'));
+      } else {
+        // @see https://github.com/rtcdn/rtcdn-draft
+        // Response:
+        //    {code: 0, sdp: "answer", sessionid: "007r51l7:X2Lv"}
+        if (!o.containsKey('code') || !o.containsKey('sdp') || o['code'] != 0) {
+          return Future.error(reply);
+        }
+
+        return Future.value(webrtc.RTCSessionDescription(o['sdp'], 'answer'));
+      }
     } finally {
       client.close();
     }
