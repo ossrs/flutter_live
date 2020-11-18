@@ -2,6 +2,7 @@
 
 ## latest
 
+* 2020-11-18, Support RTMP publish.
 * 2020-11-15, Refine UI for publisher.
 
 ## 1.0.11
