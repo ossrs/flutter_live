@@ -18,6 +18,7 @@ class _HomeState extends State<Home> {
   String _url; // The final url, should equals to controller.text
   PackageInfo _info = PackageInfo(version: '0.0.0', buildNumber: '0');
   final TextEditingController _controller = TextEditingController();
+  bool _isPublish = false;
 
   @override
   void initState() {
@@ -31,19 +32,6 @@ class _HomeState extends State<Home> {
     }).catchError((e) {
       print('platform error $e');
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('SRS: Flutter Live Streaming')),
-      body: ListView(children: [
-        UrlInputDisplay(_controller),
-        DemoUrlsDisplay(_url, onUseSelectedUrl),
-        ControlDisplay(isUrlValid(), () => this.startPlay(context)),
-        PlatformDisplay(this._info),
-      ]),
-    );
   }
 
   @override
@@ -84,6 +72,23 @@ class _HomeState extends State<Home> {
             return WebRTCStreamingPlayer(_url);
           }
         })
+    );
+  }
+
+  void showPublish(bool v) {
+    setState(() { _isPublish = v; });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('SRS: Flutter Live Streaming')),
+      body: ListView(children: [
+        UrlInputDisplay(_controller),
+        ControlDisplay(isUrlValid(), () => this.startPlay(context), _isPublish, this.showPublish),
+        DemoUrlsDisplay(_url, onUseSelectedUrl),
+        PlatformDisplay(this._info),
+      ]),
     );
   }
 }
@@ -173,17 +178,28 @@ class DemoUrlsDisplay extends StatelessWidget {
 class ControlDisplay extends StatelessWidget {
   final bool _urlAvailable;
   final VoidCallback _onPlayUrl;
-  ControlDisplay(this._urlAvailable, this._onPlayUrl);
+  final bool _isPubslish;
+  final ValueChanged<bool> _onShowPublish;
+  ControlDisplay(this._urlAvailable, this._onPlayUrl, this._isPubslish, this._onShowPublish);
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ElevatedButton(
-          child: Text('Play'), onPressed: _urlAvailable? _onPlayUrl : null,
+        Row(
+          children: [
+            Text('Publish'),
+            Switch(value: _isPubslish, onChanged: _onShowPublish),
+          ],
         ),
-        Container(width: 10)
+        Container(
+          width: 120,
+          child:ElevatedButton(
+            child: Text(_isPubslish? 'Publish' : 'Play'),
+            onPressed: _urlAvailable? _onPlayUrl : null,
+          ),
+        ),
       ],
     );
   }
