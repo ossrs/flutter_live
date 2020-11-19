@@ -25,8 +25,6 @@ class _HomeState extends State<Home> {
 
   // For publisher.
   bool _isPublish = false;
-  // Whether is publishing RTMP.
-  bool _isPublishingRTMP = false;
   // The controller for publisher.
   camera.CameraController _cameraController = null;
 
@@ -48,11 +46,7 @@ class _HomeState extends State<Home> {
   void dispose() {
     super.dispose();
     _urlController.dispose();
-    _cameraController?.dispose();
-    if (_isPublishingRTMP) {
-      _cameraController?.stopVideoStreaming();
-      print('stop streaming');
-    }
+    stopPublish();
     print('main state disposed');
   }
 
@@ -61,7 +55,6 @@ class _HomeState extends State<Home> {
     if (_url != _urlController.text) {
       setState(() {
         _url = _urlController.text;
-        onUrlChanged();
       });
     }
   }
@@ -71,19 +64,7 @@ class _HomeState extends State<Home> {
     if (_url != v) {
       setState(() {
         _urlController.text = _url = v;
-        onUrlChanged();
       });
-    }
-  }
-
-  void onUrlChanged() {
-    if (!isUrlValid()) {
-      print('Invalid url $_url');
-      return;
-    }
-
-    if (_isPublish) {
-      _isPublishingRTMP = _url.startsWith('rtmp://');
     }
   }
 
@@ -95,15 +76,10 @@ class _HomeState extends State<Home> {
     if (_cameraController == null) {
       return;
     }
-
-    if (_isPublishingRTMP) {
-      await _cameraController.stopVideoStreaming();
-      print('stop streaming');
-    }
-
+    await _cameraController.stopVideoStreaming();
     await _cameraController.dispose();
     _cameraController = null;
-    print('camera controller disposed');
+    print('camera disposed');
   }
 
   void _onStartPlayOrPublish(BuildContext context) async {
@@ -112,7 +88,7 @@ class _HomeState extends State<Home> {
       return;
     }
 
-    print('${_isPublish? "Publish":"Play"} $_url $_isPublishingRTMP');
+    print('${_isPublish? "Publish":"Play"} $_url');
 
     // For player.
     if (!_isPublish) {
@@ -123,7 +99,7 @@ class _HomeState extends State<Home> {
     }
 
     // For publisher.
-    if (_isPublishingRTMP) {
+    if (_url.startsWith('rtmp://')) {
       stopPublish();
 
       var cameras = await camera.availableCameras();
@@ -169,6 +145,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var cameraPreviewWidget = () {
+      if (!_isPublish) {
+        return Container();
+      }
+      
       if (_cameraController == null) {
         return Container();
       }
