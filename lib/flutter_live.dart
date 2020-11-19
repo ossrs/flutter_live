@@ -42,7 +42,7 @@ class FlutterLive {
   static const String rtc = 'webrtc://d.ossrs.net:11985/live/livestream';
 
   // Publish demo stream by https://ossrs.net/
-  static const String publish = 'rtmp://r.ossrs.net/live/show';
+  static const String rtmp_publish = 'rtmp://r.ossrs.net/live/show';
 
   /// The constructor for flutter live.
   FlutterLive() {
