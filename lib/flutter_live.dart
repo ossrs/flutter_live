@@ -33,20 +33,20 @@ class FlutterLive {
   static const String flv = 'http://r.ossrs.net/live/livestream.flv';
 
   /// HTTPS-FLV demo stream by https://ossrs.net/
-  static const String flvs = 'https://d.ossrs.net:18088/live/livestream.flv';
+  static const String flvs = 'https://d.ossrs.net:8088/live/livestream.flv';
 
   /// HTTPS-HLS demo stream by https://ossrs.net/
-  static const String hlss = 'https://d.ossrs.net:18088/live/livestream.m3u8';
+  static const String hlss = 'https://d.ossrs.net:8088/live/livestream.m3u8';
 
   /// WebRTC demo stream by https://ossrs.net/
-  static const String rtc = 'webrtc://d.ossrs.net:11985/live/livestream';
+  static const String rtc = 'webrtc://d.ossrs.net/live/livestream';
 
   // Publish demo stream by https://ossrs.net/
   static const String rtmp_publish = 'rtmp://r.ossrs.net/live/show';
+  static const String rtmp_publish2 = 'rtmp://d.ossrs.net/live/show';
 
   /// The constructor for flutter live.
-  FlutterLive() {
-  }
+  FlutterLive();
 }
 
 /// A realtime player, using [fijkplayer](https://pub.dev/packages/fijkplayer).
@@ -76,7 +76,7 @@ class RealtimePlayer {
   ///
   /// Note that we support all urls which FFmpeg supports.
   Future<void> play(String url) async {
-    print('Start play live streaming ${url}');
+    print('Start play live streaming $url');
 
     await _player.setOption(fijkplayer.FijkOption.playerCategory, "mediacodec-all-videos", 1);
     await _player.setOption(fijkplayer.FijkOption.hostCategory, "request-screen-on", 1);
