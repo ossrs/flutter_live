@@ -2,6 +2,10 @@
 
 ## latest
 
+## 1.0.13
+
+* 2020-12-07, Use new logo.
+
 ## 1.0.12
 
 * 2020-12-28, Refine RTMP publish.
