@@ -33,10 +33,10 @@ class FlutterLive {
   static const String flv = 'http://r.ossrs.net/live/livestream.flv';
 
   /// HTTPS-FLV demo stream by https://ossrs.net/
-  static const String flvs = 'https://d.ossrs.net:8088/live/livestream.flv';
+  static const String flvs = 'https://d.ossrs.net/live/livestream.flv';
 
   /// HTTPS-HLS demo stream by https://ossrs.net/
-  static const String hlss = 'https://d.ossrs.net:8088/live/livestream.m3u8';
+  static const String hlss = 'https://d.ossrs.net/live/livestream.m3u8';
 
   /// WebRTC demo stream by https://ossrs.net/
   static const String rtc = 'webrtc://d.ossrs.net/live/livestream';
@@ -118,14 +118,18 @@ class WebRTCUri {
   static WebRTCUri parse(String url) {
     Uri uri = Uri.parse(url);
 
-    var schema = 'http';
+    var schema = 'https'; // For native, default to HTTPS
     if (uri.queryParameters.containsKey('schema')) {
       schema = uri.queryParameters['schema'];
+    } else {
+      schema = 'https';
     }
 
-    var port = (uri.port > 0)? uri.port : 1985;
+    var port = (uri.port > 0)? uri.port : 443;
     if (schema == 'https') {
       port = (uri.port > 0)? uri.port : 443;
+    } else if (schema == 'http') {
+      port = (uri.port > 0)? uri.port : 1985;
     }
 
     var api = '/rtc/v1/play/';

@@ -13,7 +13,7 @@ import 'package:flutter_live_example/main.dart';
 void main() {
   testWidgets('Verify Platform version', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(MaterialApp(debugShowCheckedModeBanner: false, home: Home()));
 
     // Verify that platform version is retrieved.
     expect(

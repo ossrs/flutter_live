@@ -6,11 +6,18 @@
 
 跨平台(iOS+Andriod)多协议(RTMP/HTTP-FLV/HLS/WebRTC)直播播放器, Flutter+[SRS](https://github.com/ossrs/srs)。
 
-Live streaming player, iOS+Android, RTMP/HTTP-FLV/HLS/WebRTC, by Flutter+[SRS](https://github.com/ossrs/srs).
+Live Streaming player, iOS+Android, RTMP/HTTP-FLV/HLS/WebRTC, by Flutter+[SRS](https://github.com/ossrs/srs).
 
 ## Usage
 
-Install iOS/Android player app from [here](https://ossrs.net), or
+国内设置代理：
+
+```bash
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn && 
+export PUB_HOSTED_URL=https://pub.flutter-io.cn
+```
+
+编译和运行SRS直播（iOS可以从[这里](https://ossrs.net)安装）：
 
 ```
 git clone https://github.com/ossrs/flutter_live.git &&
