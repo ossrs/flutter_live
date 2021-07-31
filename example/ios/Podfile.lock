@@ -1,5 +1,5 @@
 PODS:
-  - BIJKPlayer (0.7.10)
+  - BIJKPlayer (0.7.15)
   - camera_with_rtmp (0.0.1):
     - Flutter
     - HaishinKit (~> 1.0.10)
@@ -20,6 +20,8 @@ PODS:
   - Logboard (2.1.3)
   - package_info (0.0.1):
     - Flutter
+  - path_provider (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - camera_with_rtmp (from `.symlinks/plugins/camera_with_rtmp/ios`)
@@ -28,6 +30,7 @@ DEPENDENCIES:
   - flutter_live (from `.symlinks/plugins/flutter_live/ios`)
   - flutter_webrtc (from `.symlinks/plugins/flutter_webrtc/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
 
 SPEC REPOS:
   trunk:
@@ -50,9 +53,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_webrtc/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
 
 SPEC CHECKSUMS:
-  BIJKPlayer: 6727b075679eb5173b6d16f42ff2f33b9a757213
+  BIJKPlayer: 37fd8033360eedfb1afc3658e14fbf5a25ace540
   camera_with_rtmp: 606d566f89a21f1fed15ffda99cb247304beccd4
   fijkplayer: 0d3793a2822d030ef5bba77f904bff1f7a91a115
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
@@ -63,7 +68,8 @@ SPEC CHECKSUMS:
   Libyuv: 5f79ced0ee66e60a612ca97de1e6ccacd187a437
   Logboard: e74ec2d9941abd22f4db3a3ddcd0735011df92c7
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
 
 PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2
