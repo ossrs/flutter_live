@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 
@@ -5,9 +6,11 @@ import 'package:flutter_live/flutter_live.dart' as flutter_live;
 import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
 import 'package:fijkplayer/fijkplayer.dart' as fijkplayer;
 import 'package:camera_with_rtmp/camera.dart' as camera;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'startup.dart';
 
 void main() {
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: Home()));
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: Startup()));
 }
 
 class Home extends StatefulWidget {
@@ -159,16 +162,13 @@ class _HomeState extends State<Home> {
       this._onStartPlayOrPublish(context);
     };
 
-    return Scaffold(
-      appBar: AppBar(title: Text('SRS: Flutter Live Streaming')),
-      body: ListView(children: [
+    return ListView(children: [
         UrlInputDisplay(_urlController),
         ControlDisplay(isUrlValid(), _onStartPlayOrPublish, _isPublish, _isPublishing, _onSwitchPublish),
         CameraDisplay(_isPublish, _cameraController),
         DemoUrlsDisplay(_url, _onUserSelectUrl, _isPublish),
         PlatformDisplay(_info),
-      ]),
-    );
+      ]);
   }
 }
 
@@ -348,7 +348,17 @@ class PlatformDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [Text('SRS/v${_info.version}+${_info.buildNumber}')],
+      children: [
+        Text.rich(
+          TextSpan(
+            text: 'SRS/v${_info.version}+${_info.buildNumber}',
+            recognizer: TapGestureRecognizer() ..onTap = () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.setBool("login", false);
+            },
+          ),
+        ),
+      ],
     );
   }
 }

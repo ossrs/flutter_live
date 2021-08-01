@@ -2,6 +2,10 @@
 
 ## latest
 
+## 1.0.17
+
+* 2021-08-01, Support agree privacy.
+
 ## 1.0.16
 
 * 2021-08-01, Use new logo.
