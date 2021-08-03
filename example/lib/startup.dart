@@ -27,9 +27,9 @@ class _StartupState extends State<Startup> {
     });
   }
 
-  void _onAgreePrivacy(bool v) {
+  void _onAgreePrivacy() {
     setState(() {
-      _btnEnabled = v;
+      _btnEnabled = !_btnEnabled;
     });
   }
 
@@ -56,7 +56,7 @@ class _StartupState extends State<Startup> {
 class PrivacyDisplay extends StatelessWidget {
   final bool _btnEnabled;
   final VoidCallback _onLogin;
-  final ValueChanged<bool> _onAgreePrivacy;
+  final VoidCallback _onAgreePrivacy;
   PrivacyDisplay(this._btnEnabled, this._onAgreePrivacy, this._onLogin);
 
   @override
@@ -86,11 +86,18 @@ class PrivacyDisplay extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget> [
-              Checkbox(value: _btnEnabled, onChanged: _onAgreePrivacy),
+              Checkbox(value: _btnEnabled, onChanged: (bool) {
+                _onAgreePrivacy();
+              }),
               Text.rich(
                 TextSpan(
-                  text: '我已阅读并同意',
                   children: [
+                    TextSpan(
+                      text: '我已阅读并同意',
+                      recognizer: TapGestureRecognizer()..onTap = () {
+                        _onAgreePrivacy();
+                      },
+                    ),
                     TextSpan(
                       text: '《隐私政策》',
                       style: TextStyle(color: Color(0xFF00CED2)),
