@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'dart:io' show Platform;
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,7 +48,7 @@ class _StartupState extends State<Startup> {
     return Scaffold(
       appBar: AppBar(title: Text('SRS: Flutter Live Streaming')),
       body: Container(
-        child: _login? Home() : PrivacyDisplay(_btnEnabled, _onAgreePrivacy, _onLogin),
+        child: (_login || !Platform.isAndroid)? Home() : PrivacyDisplay(_btnEnabled, _onAgreePrivacy, _onLogin),
       ),
     );
   }
