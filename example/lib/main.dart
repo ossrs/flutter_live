@@ -1,16 +1,20 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'dart:io' show Platform;
 
 import 'package:flutter_live/flutter_live.dart' as flutter_live;
 import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
 import 'package:fijkplayer/fijkplayer.dart' as fijkplayer;
 import 'package:camera_with_rtmp/camera.dart' as camera;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'startup.dart';
+import 'privacy.dart';
 
 void main() {
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: Startup()));
+  runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Platform.isAndroid? Privacy() : Home(),
+  ));
 }
 
 class Home extends StatefulWidget {
@@ -31,6 +35,26 @@ class _HomeState extends State<Home> {
   bool _isPublishing = false;
   // The controller for publisher.
   camera.CameraController _cameraController = null;
+
+  @override
+  Widget build(BuildContext context) {
+    var _onStartPlayOrPublish = () {
+      this._onStartPlayOrPublish(context);
+    };
+
+    return Scaffold(
+      appBar: AppBar(title: Text('SRS: Flutter Live Streaming')),
+      body: Container(
+        child: ListView(children: [
+          UrlInputDisplay(_urlController),
+          ControlDisplay(isUrlValid(), _onStartPlayOrPublish, _isPublish, _isPublishing, _onSwitchPublish),
+          CameraDisplay(_isPublish, _cameraController),
+          DemoUrlsDisplay(_url, _onUserSelectUrl, _isPublish),
+          PlatformDisplay(_info),
+        ]),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -154,21 +178,6 @@ class _HomeState extends State<Home> {
       stopPublish();
     }
     setState(() { _isPublish = v; });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var _onStartPlayOrPublish = () {
-      this._onStartPlayOrPublish(context);
-    };
-
-    return ListView(children: [
-        UrlInputDisplay(_urlController),
-        ControlDisplay(isUrlValid(), _onStartPlayOrPublish, _isPublish, _isPublishing, _onSwitchPublish),
-        CameraDisplay(_isPublish, _cameraController),
-        DemoUrlsDisplay(_url, _onUserSelectUrl, _isPublish),
-        PlatformDisplay(_info),
-      ]);
   }
 }
 
@@ -375,6 +384,17 @@ class _LiveStreamingPlayerState extends State<LiveStreamingPlayer> {
   final flutter_live.RealtimePlayer _player = flutter_live.RealtimePlayer(fijkplayer.FijkPlayer());
 
   @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('SRS Live Streaming')),
+      body: fijkplayer.FijkView(
+          player: _player.fijk, panelBuilder: fijkplayer.fijkPanel2Builder(),
+          fsFit: fijkplayer.FijkFit.fill
+      ),
+    );
+  }
+
+  @override
   void initState() {
     super.initState();
     _player.initState();
@@ -384,17 +404,6 @@ class _LiveStreamingPlayerState extends State<LiveStreamingPlayer> {
   void autoPlay() async {
     // Auto start play live streaming.
     await _player.play(widget._url);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('SRS Live Streaming')),
-      body: fijkplayer.FijkView(
-        player: _player.fijk, panelBuilder: fijkplayer.fijkPanel2Builder(),
-        fsFit: fijkplayer.FijkFit.fill
-      ),
-    );
   }
 
   @override
@@ -418,6 +427,16 @@ class _WebRTCStreamingPlayerState extends State<WebRTCStreamingPlayer> {
   final flutter_live.WebRTCPlayer _player = flutter_live.WebRTCPlayer();
 
   @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('SRS WebRTC Streaming')),
+      body: GestureDetector(onTap: _switchLoudspeaker, child: Container(
+          child: webrtc.RTCVideoView(_video), decoration: BoxDecoration(color: Colors.grey[500])
+      )),
+    );
+  }
+
+  @override
   void initState() {
     super.initState();
     _player.initState();
@@ -435,16 +454,6 @@ class _WebRTCStreamingPlayerState extends State<WebRTCStreamingPlayer> {
 
     // Auto start play WebRTC streaming.
     await _player.play(widget._url);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('SRS WebRTC Streaming')),
-      body: GestureDetector(onTap: _switchLoudspeaker, child: Container(
-        child: webrtc.RTCVideoView(_video), decoration: BoxDecoration(color: Colors.grey[500])
-      )),
-    );
   }
 
   void _switchLoudspeaker() {
