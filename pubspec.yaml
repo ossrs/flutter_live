@@ -4,7 +4,7 @@ description: Live streaming player, iOS+Android, RTMP/HTTP-FLV/HLS/WebRTC, by Fl
 homepage: https://github.com/ossrs/flutter_live
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.20.0 <2.0.0"
 
 dependencies:
@@ -12,7 +12,11 @@ dependencies:
     sdk: flutter
   fijkplayer: ^0.8.8
   flutter_webrtc: ^0.6.3
-  camera_with_rtmp: ^0.3.2
+  camera_with_rtmp:
+    git:
+      url: https://github.com/babulpatel1309/flutter_rtmppublisher.git
+      ref: 963c0b82cd94f09f1e4387d33a89e3b067957c19
+
 
 dev_dependencies:
   flutter_test:
