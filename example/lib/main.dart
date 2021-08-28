@@ -6,7 +6,7 @@ import 'dart:io' show Platform;
 import 'package:flutter_live/flutter_live.dart' as flutter_live;
 import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
 import 'package:fijkplayer/fijkplayer.dart' as fijkplayer;
-import 'package:rtmp_publisher_null_safety/camera.dart' as camera;
+import 'package:camera_with_rtmp/camera.dart' as camera;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'privacy.dart';
 
