@@ -12,11 +12,18 @@ dependencies:
     sdk: flutter
   fijkplayer: ^0.10.0
   flutter_webrtc: ^0.6.5
-  #rtmp_publisher_null_safety: ^0.3.9
-  camera_with_rtmp:
-    git:
-      url: https://github.com/hetao29/flutter_rtmppublisher.git
-      ref: 79010b3724574f79b60974b64982aad751b56803
+  rtmp_publisher: 
+    git: 
+      url: git@github.com:hetao29/flutter_rtmp_publisher.git  
+      ref: ef7a7b80e49c933009429c5f0c93bd093bd97c70
+  #camera_with_rtmp:
+    #path: ../flutter_rtmppublisher_hetao29
+  #  git: 
+  #    url: git@github.com:babulpatel1309/flutter_rtmppublisher.git
+
+    #git:
+    #  url: https://github.com/hetao29/flutter_rtmppublisher.git
+    #  ref: 79010b3724574f79b60974b64982aad751b56803
 
 dev_dependencies:
   flutter_test:
