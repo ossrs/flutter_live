@@ -15,7 +15,7 @@ dependencies:
   rtmp_publisher: 
     git: 
       url: git@github.com:hetao29/flutter_rtmp_publisher.git  
-      ref: 4fb5819440d480ca64693c1418ddc41213cce616
+      ref: ad21c2eb003854b195745f87df7ed38f7ab18010
   #camera_with_rtmp:
     #path: ../flutter_rtmppublisher_hetao29
   #  git: 
