@@ -110,9 +110,10 @@ class RealtimePlayer {
 ///   streamUrl: "webrtc://d.ossrs.net:11985/live/livestream"
 class WebRTCUri {
   /// The api server url for WebRTC streaming.
-  String api;
+  String api = "";
+
   /// The stream url to play or publish.
-  String streamUrl;
+  String streamUrl = "";
 
   /// Parse the url to WebRTC uri.
   static WebRTCUri parse(String url) {
@@ -120,21 +121,21 @@ class WebRTCUri {
 
     var schema = 'https'; // For native, default to HTTPS
     if (uri.queryParameters.containsKey('schema')) {
-      schema = uri.queryParameters['schema'];
+      schema = uri.queryParameters['schema']!;
     } else {
       schema = 'https';
     }
 
-    var port = (uri.port > 0)? uri.port : 443;
+    var port = (uri.port > 0) ? uri.port : 443;
     if (schema == 'https') {
-      port = (uri.port > 0)? uri.port : 443;
+      port = (uri.port > 0) ? uri.port : 443;
     } else if (schema == 'http') {
-      port = (uri.port > 0)? uri.port : 1985;
+      port = (uri.port > 0) ? uri.port : 1985;
     }
 
     var api = '/rtc/v1/play/';
     if (uri.queryParameters.containsKey('play')) {
-      api = uri.queryParameters['play'];
+      api = uri.queryParameters['play']!;
     }
 
     var apiParams = [];
@@ -145,7 +146,7 @@ class WebRTCUri {
     }
 
     var apiUrl = '${schema}://${uri.host}:${port}${api}';
-    if (!apiParams.isEmpty) {
+    if (apiParams.isEmpty) {
       apiUrl += '?' + apiParams.join('&');
     }
 
@@ -159,8 +160,8 @@ class WebRTCUri {
 
 /// A WebRTC player, using [flutter_webrtc](https://pub.dev/packages/flutter_webrtc)
 class WebRTCPlayer {
-  webrtc.AddStreamCallback _onRemoteStream;
-  webrtc.RTCPeerConnection _pc;
+  webrtc.AddStreamCallback? _onRemoteStream;
+  webrtc.RTCPeerConnection? _pc;
 
   /// When got a remote stream.
   set onRemoteStream(webrtc.AddStreamCallback v) {
@@ -168,14 +169,13 @@ class WebRTCPlayer {
   }
 
   /// Initialize the player.
-  void initState() {
-  }
+  void initState() {}
 
   /// Start play a url.
   /// [url] must a path parsed by [WebRTCUri.parse] in https://github.com/rtcdn/rtcdn-draft
   Future<void> play(String url) async {
     if (_pc != null) {
-      await _pc.close();
+      await _pc!.close();
     }
 
     // Create the peer connection.
@@ -187,36 +187,36 @@ class WebRTCPlayer {
     print('WebRTC: createPeerConnection done');
 
     // Setup the peer connection.
-    _pc.onAddStream = (webrtc.MediaStream stream) {
+    _pc!.onAddStream = (webrtc.MediaStream stream) {
       print('WebRTC: got stream ${stream.id}');
       if (_onRemoteStream == null) {
         print('Warning: Stream ${stream.id} is leak');
         return;
       }
-      _onRemoteStream(stream);
+      _onRemoteStream!(stream);
     };
 
-    _pc.addTransceiver(
-        kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeAudio,
-        init: webrtc.RTCRtpTransceiverInit(direction: webrtc.TransceiverDirection.RecvOnly),
+    _pc!.addTransceiver(
+      kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeAudio,
+      init: webrtc.RTCRtpTransceiverInit(direction: webrtc.TransceiverDirection.RecvOnly),
     );
-    _pc.addTransceiver(
+    _pc!.addTransceiver(
       kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeVideo,
       init: webrtc.RTCRtpTransceiverInit(direction: webrtc.TransceiverDirection.RecvOnly),
     );
     print('WebRTC: Setup PC done, A|V RecvOnly');
 
     // Start SDP handshake.
-    webrtc.RTCSessionDescription offer = await _pc.createOffer({
+    webrtc.RTCSessionDescription offer = await _pc!.createOffer({
       'mandatory': {'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true},
     });
-    await _pc.setLocalDescription(offer);
-    print('WebRTC: createOffer, ${offer.type} is ${offer.sdp.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
+    await _pc!.setLocalDescription(offer);
+    print('WebRTC: createOffer, ${offer.type} is ${offer.sdp?.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
 
-    webrtc.RTCSessionDescription answer = await _handshake(url, offer.sdp);
-    print('WebRTC: got ${answer.type} is ${answer.sdp.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
+    webrtc.RTCSessionDescription answer = await _handshake(url, offer.sdp ?? "");
+    print('WebRTC: got ${answer.type} is ${answer.sdp?.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
 
-    await _pc.setRemoteDescription(answer);
+    await _pc!.setRemoteDescription(answer);
   }
 
   /// Handshake to exchange SDP, send offer and got answer.
@@ -261,8 +261,7 @@ class WebRTCPlayer {
   /// Dispose the player.
   void dispose() {
     if (_pc != null) {
-      _pc.close();
+      _pc!.close();
     }
   }
 }
-
