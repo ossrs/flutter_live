@@ -27,14 +27,14 @@ class _HomeState extends State<Home> {
   PackageInfo _info = PackageInfo(version: '0.0.0', buildNumber: '0');
 
   // The url to play or publish.
-  String _url; // The final url, should equals to controller.text
+  late String _url; // The final url, should equals to controller.text
   final TextEditingController _urlController = TextEditingController();
 
   // For publisher.
   bool _isPublish = false;
   bool _isPublishing = false;
   // The controller for publisher.
-  camera.CameraController _cameraController = null;
+  camera.CameraController? _cameraController;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
         child: ListView(children: [
           UrlInputDisplay(_urlController),
           ControlDisplay(isUrlValid(), _onStartPlayOrPublish, _isPublish, _isPublishing, _onSwitchPublish),
-          CameraDisplay(_isPublish, _cameraController),
+          CameraDisplay(_isPublish, _cameraController!),
           DemoUrlsDisplay(_url, _onUserSelectUrl, _isPublish),
           PlatformDisplay(_info),
         ]),
@@ -87,11 +87,11 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void _onUserSelectUrl(String v) {
+  void _onUserSelectUrl(String? v) {
     print('User select $v, url=$_url, text=${_urlController.text}');
     if (_url != v) {
       setState(() {
-        _urlController.text = _url = v;
+        _urlController.text = _url = v!;
       });
     }
   }
@@ -105,14 +105,14 @@ class _HomeState extends State<Home> {
       return;
     }
     _isPublishing = false;
-    await _cameraController.stopVideoStreaming();
-    await _cameraController.dispose();
+    await _cameraController?.stopVideoStreaming();
+    await _cameraController?.dispose();
     _cameraController = null;
     print('Camera disposed, publish=$_isPublish, publishing=$_isPublishing');
   }
 
   void stopPublish() async {
-    await disposeCamera();
+    disposeCamera();
     setState(() { });
     print('Stop publish url=$_url, publishing=$_isPublishing, controller=${_cameraController?.value.isInitialized}');
   }
@@ -159,14 +159,14 @@ class _HomeState extends State<Home> {
       print('Use camera ${desc.name} ${desc.lensDirection}');
 
       _cameraController = camera.CameraController(desc, camera.ResolutionPreset.low);
-      _cameraController.addListener(() {
+      _cameraController?.addListener(() {
         setState(() { print('got camera event'); });
       });
 
-      await _cameraController.initialize();
+      await _cameraController?.initialize();
       print('Camera initialized ok');
 
-      await _cameraController.startVideoStreaming(_url, bitrate: 300 * 1000);
+      await _cameraController?.startVideoStreaming(_url, bitrate: 300 * 1000);
       print('Start streaming to $_url');
 
       setState(() { _isPublishing = true; });
@@ -199,7 +199,7 @@ class UrlInputDisplay extends StatelessWidget {
 
 class DemoUrlsDisplay extends StatelessWidget {
   final String _url;
-  final ValueChanged<String> _onUserSelectUrl;
+  final ValueChanged<String?> _onUserSelectUrl;
   final bool _isPublish;
   DemoUrlsDisplay(this._url, this._onUserSelectUrl, this._isPublish);
 

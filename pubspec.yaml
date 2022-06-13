@@ -4,8 +4,8 @@ description: Live streaming player, iOS+Android, RTMP/HTTP-FLV/HLS/WebRTC, by Fl
 homepage: https://github.com/ossrs/flutter_live
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.20.0 <2.0.0"
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.20.0 <3.0.0"
 
 dependencies:
   flutter:

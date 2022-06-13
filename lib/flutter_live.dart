@@ -110,15 +110,15 @@ class RealtimePlayer {
 ///   streamUrl: "webrtc://d.ossrs.net:11985/live/livestream"
 class WebRTCUri {
   /// The api server url for WebRTC streaming.
-  String api;
+  late String api;
   /// The stream url to play or publish.
-  String streamUrl;
+  late String streamUrl;
 
   /// Parse the url to WebRTC uri.
   static WebRTCUri parse(String url) {
     Uri uri = Uri.parse(url);
 
-    var schema = 'https'; // For native, default to HTTPS
+    String? schema = 'https'; // For native, default to HTTPS
     if (uri.queryParameters.containsKey('schema')) {
       schema = uri.queryParameters['schema'];
     } else {
@@ -132,7 +132,7 @@ class WebRTCUri {
       port = (uri.port > 0)? uri.port : 1985;
     }
 
-    var api = '/rtc/v1/play/';
+    String? api = '/rtc/v1/play/';
     if (uri.queryParameters.containsKey('play')) {
       api = uri.queryParameters['play'];
     }
@@ -144,8 +144,8 @@ class WebRTCUri {
       }
     }
 
-    var apiUrl = '${schema}://${uri.host}:${port}${api}';
-    if (!apiParams.isEmpty) {
+    var apiUrl = '$schema://${uri.host}:${port}${api}';
+    if (apiParams.isNotEmpty) {
       apiUrl += '?' + apiParams.join('&');
     }
 
@@ -159,8 +159,8 @@ class WebRTCUri {
 
 /// A WebRTC player, using [flutter_webrtc](https://pub.dev/packages/flutter_webrtc)
 class WebRTCPlayer {
-  webrtc.AddStreamCallback _onRemoteStream;
-  webrtc.RTCPeerConnection _pc;
+  late webrtc.AddStreamCallback _onRemoteStream;
+  late webrtc.RTCPeerConnection _pc;
 
   /// When got a remote stream.
   set onRemoteStream(webrtc.AddStreamCallback v) {
@@ -197,8 +197,8 @@ class WebRTCPlayer {
     };
 
     _pc.addTransceiver(
-        kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeAudio,
-        init: webrtc.RTCRtpTransceiverInit(direction: webrtc.TransceiverDirection.RecvOnly),
+      kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeAudio,
+      init: webrtc.RTCRtpTransceiverInit(direction: webrtc.TransceiverDirection.RecvOnly),
     );
     _pc.addTransceiver(
       kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeVideo,
@@ -211,10 +211,10 @@ class WebRTCPlayer {
       'mandatory': {'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true},
     });
     await _pc.setLocalDescription(offer);
-    print('WebRTC: createOffer, ${offer.type} is ${offer.sdp.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
+    print('WebRTC: createOffer, ${offer.type} is ${offer.sdp?.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
 
-    webrtc.RTCSessionDescription answer = await _handshake(url, offer.sdp);
-    print('WebRTC: got ${answer.type} is ${answer.sdp.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
+    webrtc.RTCSessionDescription answer = await _handshake(url, offer.sdp!);
+    print('WebRTC: got ${answer.type} is ${answer.sdp?.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
 
     await _pc.setRemoteDescription(answer);
   }
