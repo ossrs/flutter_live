@@ -1,54 +1,42 @@
 PODS:
-  - BIJKPlayer (0.7.15)
-  - camera_with_rtmp (0.0.1):
-    - Flutter
-    - HaishinKit (~> 1.0.10)
-  - fijkplayer (0.8.8):
-    - BIJKPlayer (~> 0.7.10)
+  - BIJKPlayer (0.7.16)
+  - fijkplayer (0.11.0):
+    - BIJKPlayer (~> 0.7.16)
     - Flutter
   - Flutter (1.0.0)
   - flutter_live (0.0.1):
     - Flutter
-  - flutter_webrtc (0.2.2):
+  - flutter_webrtc (0.9.36):
     - Flutter
-    - GoogleWebRTC (= 1.1.31999)
-    - Libyuv (= 1703)
-  - GoogleWebRTC (1.1.31999)
-  - HaishinKit (1.0.13):
-    - Logboard (~> 2.1.3)
-  - Libyuv (1703)
-  - Logboard (2.1.3)
+    - WebRTC-SDK (= 114.5735.10)
   - package_info (0.0.1):
     - Flutter
-  - path_provider (0.0.1):
+  - path_provider_foundation (0.0.1):
     - Flutter
-  - shared_preferences (0.0.1):
+    - FlutterMacOS
+  - shared_preferences_foundation (0.0.1):
     - Flutter
-  - url_launcher (0.0.1):
+    - FlutterMacOS
+  - url_launcher_ios (0.0.1):
     - Flutter
+  - WebRTC-SDK (114.5735.10)
 
 DEPENDENCIES:
-  - camera_with_rtmp (from `.symlinks/plugins/camera_with_rtmp/ios`)
   - fijkplayer (from `.symlinks/plugins/fijkplayer/ios`)
   - Flutter (from `Flutter`)
   - flutter_live (from `.symlinks/plugins/flutter_live/ios`)
   - flutter_webrtc (from `.symlinks/plugins/flutter_webrtc/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
-  - path_provider (from `.symlinks/plugins/path_provider/ios`)
-  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
-  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
     - BIJKPlayer
-    - GoogleWebRTC
-    - HaishinKit
-    - Libyuv
-    - Logboard
+    - WebRTC-SDK
 
 EXTERNAL SOURCES:
-  camera_with_rtmp:
-    :path: ".symlinks/plugins/camera_with_rtmp/ios"
   fijkplayer:
     :path: ".symlinks/plugins/fijkplayer/ios"
   Flutter:
@@ -59,29 +47,25 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_webrtc/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
-  path_provider:
-    :path: ".symlinks/plugins/path_provider/ios"
-  shared_preferences:
-    :path: ".symlinks/plugins/shared_preferences/ios"
-  url_launcher:
-    :path: ".symlinks/plugins/url_launcher/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  BIJKPlayer: 37fd8033360eedfb1afc3658e14fbf5a25ace540
-  camera_with_rtmp: 606d566f89a21f1fed15ffda99cb247304beccd4
-  fijkplayer: 0d3793a2822d030ef5bba77f904bff1f7a91a115
-  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  BIJKPlayer: 4c5d66e5cb99ae5bade6f22a4fcc031722a81c64
+  fijkplayer: 8b6d864948dc28e6e07248ed4fce61a7467db4df
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_live: efecc5d284c5a3721d436eebd5ea4322eef31a08
-  flutter_webrtc: 39898454258b54ba51996850d5da8d5d53bf1524
-  GoogleWebRTC: b39a78c4f5cc6b0323415b9233db03a2faa7b0f0
-  HaishinKit: d1786896ace24065d466bde02356c5352ac001b0
-  Libyuv: 5f79ced0ee66e60a612ca97de1e6ccacd187a437
-  Logboard: e74ec2d9941abd22f4db3a3ddcd0735011df92c7
+  flutter_webrtc: b33475c3a57d59ff05bf87b4f5d3feceac63f291
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
-  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
-  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+  url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
+  WebRTC-SDK: 8c0edd05b880a39648118192c252667ea06dea51
 
-PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
 
-COCOAPODS: 1.10.2
+COCOAPODS: 1.15.2
