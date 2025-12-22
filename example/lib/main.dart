@@ -6,14 +6,14 @@ import 'dart:io' show Platform;
 import 'package:flutter_live/flutter_live.dart' as flutter_live;
 import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
 import 'package:fijkplayer/fijkplayer.dart' as fijkplayer;
-import 'package:camera_with_rtmp/camera.dart' as camera;
+// import 'package:camera_with_rtmp/camera.dart' as camera;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'privacy.dart';
 
 void main() {
   runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Platform.isAndroid? Privacy() : Home(),
+    debugShowCheckedModeBanner: false,
+    home: Platform.isAndroid ? Privacy() : Home(),
   ));
 }
 
@@ -24,17 +24,18 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   // Platform information.
-  PackageInfo _info = PackageInfo(version: '0.0.0', buildNumber: '0');
+  PackageInfo _info = PackageInfo(
+      appName: '', packageName: '', version: '0.0.0', buildNumber: '0');
 
   // The url to play or publish.
-  String _url; // The final url, should equals to controller.text
+  String _url = ''; // The final url, should equals to controller.text
   final TextEditingController _urlController = TextEditingController();
 
   // For publisher.
   bool _isPublish = false;
   bool _isPublishing = false;
   // The controller for publisher.
-  camera.CameraController _cameraController = null;
+  // camera.CameraController? _cameraController = null;
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +48,9 @@ class _HomeState extends State<Home> {
       body: Container(
         child: ListView(children: [
           UrlInputDisplay(_urlController),
-          ControlDisplay(isUrlValid(), _onStartPlayOrPublish, _isPublish, _isPublishing, _onSwitchPublish),
-          CameraDisplay(_isPublish, _cameraController),
+          ControlDisplay(isUrlValid(), _onStartPlayOrPublish, _isPublish,
+              _isPublishing, _onSwitchPublish),
+          // CameraDisplay(_isPublish, _cameraController!),
           DemoUrlsDisplay(_url, _onUserSelectUrl, _isPublish),
           PlatformDisplay(_info),
         ]),
@@ -64,7 +66,9 @@ class _HomeState extends State<Home> {
     _urlController.addListener(_onUserEditUrl);
 
     PackageInfo.fromPlatform().then((info) {
-      setState(() { _info = info; });
+      setState(() {
+        _info = info;
+      });
     }).catchError((e) {
       print('Platform error $e');
     });
@@ -87,34 +91,34 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void _onUserSelectUrl(String v) {
+  void _onUserSelectUrl(String? v) {
     print('User select $v, url=$_url, text=${_urlController.text}');
     if (_url != v) {
       setState(() {
-        _urlController.text = _url = v;
+        _urlController.text = _url = v!;
       });
     }
   }
 
   bool isUrlValid() {
-    return _url != null && _url.contains('://');
+    return _url.contains('://');
   }
 
   void disposeCamera() async {
-    if (_cameraController == null) {
-      return;
-    }
+    // if (_cameraController == null) {
+    //   return;
+    // }
     _isPublishing = false;
-    await _cameraController.stopVideoStreaming();
-    await _cameraController.dispose();
-    _cameraController = null;
+    // await _cameraController?.stopVideoStreaming();
+    // await _cameraController?.dispose();
+    // _cameraController = null;
     print('Camera disposed, publish=$_isPublish, publishing=$_isPublishing');
   }
 
   void stopPublish() async {
-    await disposeCamera();
-    setState(() { });
-    print('Stop publish url=$_url, publishing=$_isPublishing, controller=${_cameraController?.value.isInitialized}');
+    disposeCamera();
+    setState(() {});
+    print('Stop publish url=$_url, publishing=$_isPublishing');
   }
 
   void _onStartPlayOrPublish(BuildContext context) async {
@@ -123,12 +127,15 @@ class _HomeState extends State<Home> {
       return;
     }
 
-    print('${_isPublishing? "Stop":""} ${_isPublish? "Publish":"Play"} url=$_url, publishing=$_isPublishing');
+    print(
+        '${_isPublishing ? "Stop" : ""} ${_isPublish ? "Publish" : "Play"} url=$_url, publishing=$_isPublishing');
 
     // For player.
     if (!_isPublish) {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return _url.startsWith('webrtc://')? WebRTCStreamingPlayer(_url) : LiveStreamingPlayer(_url);
+        return _url.startsWith('webrtc://')
+            ? WebRTCStreamingPlayer(_url)
+            : LiveStreamingPlayer(_url);
       }));
       return;
     }
@@ -143,33 +150,38 @@ class _HomeState extends State<Home> {
     if (_url.startsWith('rtmp://')) {
       stopPublish();
 
-      var cameras = await camera.availableCameras();
-      if (cameras.isEmpty) {
-        print('Error: No cameras');
-        return;
-      }
+      // var cameras = await camera.availableCameras();
+      // if (cameras.isEmpty) {
+      //   print('Error: No cameras');
+      //   return;
+      // }
 
-      camera.CameraDescription desc = cameras[0];
-      for (var c in cameras) {
-        if (c.lensDirection == camera.CameraLensDirection.front) {
-          desc = c;
-          break;
-        }
-      }
-      print('Use camera ${desc.name} ${desc.lensDirection}');
+      // camera.CameraDescription desc = cameras[0];
+      // for (var c in cameras) {
+      //   if (c.lensDirection == camera.CameraLensDirection.front) {
+      //     desc = c;
+      //     break;
+      //   }
+      // }
+      // print('Use camera ${desc.name} ${desc.lensDirection}');
 
-      _cameraController = camera.CameraController(desc, camera.ResolutionPreset.low);
-      _cameraController.addListener(() {
-        setState(() { print('got camera event'); });
-      });
+      // _cameraController =
+      //     camera.CameraController(desc, camera.ResolutionPreset.low);
+      // _cameraController?.addListener(() {
+      //   setState(() {
+      //     print('got camera event');
+      //   });
+      // });
 
-      await _cameraController.initialize();
-      print('Camera initialized ok');
+      // await _cameraController?.initialize();
+      // print('Camera initialized ok');
 
-      await _cameraController.startVideoStreaming(_url, bitrate: 300 * 1000);
+      // await _cameraController?.startVideoStreaming(_url, bitrate: 300 * 1000);
       print('Start streaming to $_url');
 
-      setState(() { _isPublishing = true; });
+      setState(() {
+        _isPublishing = true;
+      });
     }
   }
 
@@ -177,7 +189,9 @@ class _HomeState extends State<Home> {
     if (!v) {
       stopPublish();
     }
-    setState(() { _isPublish = v; });
+    setState(() {
+      _isPublish = v;
+    });
   }
 }
 
@@ -189,9 +203,10 @@ class UrlInputDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: TextField(
-        controller: _controller, autofocus: false,
-        decoration: InputDecoration(hintText: 'Please select or input url...')
-      ),
+          controller: _controller,
+          autofocus: false,
+          decoration:
+              InputDecoration(hintText: 'Please select or input url...')),
       padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
     );
   }
@@ -199,86 +214,159 @@ class UrlInputDisplay extends StatelessWidget {
 
 class DemoUrlsDisplay extends StatelessWidget {
   final String _url;
-  final ValueChanged<String> _onUserSelectUrl;
+  final ValueChanged<String?> _onUserSelectUrl;
   final bool _isPublish;
   DemoUrlsDisplay(this._url, this._onUserSelectUrl, this._isPublish);
 
   @override
   Widget build(BuildContext context) {
-    return Container(child:
-      _isPublish? Column(children: [
-        ListTile(
-          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('RTMP', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(flutter_live.FlutterLive.rtmp_publish, style: TextStyle(color: Colors.grey[500])),
-          ]),
-          onTap: () => _onUserSelectUrl(flutter_live.FlutterLive.rtmp_publish), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: flutter_live.FlutterLive.rtmp_publish, groupValue: _url, onChanged: _onUserSelectUrl),
-        ),
-        ListTile(
-          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('RTMP', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(flutter_live.FlutterLive.rtmp_publish2, style: TextStyle(color: Colors.grey[500])),
-          ]),
-          onTap: () => _onUserSelectUrl(flutter_live.FlutterLive.rtmp_publish2), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: flutter_live.FlutterLive.rtmp_publish2, groupValue: _url, onChanged: _onUserSelectUrl),
-        ),
-      ],) : Column(children: [
-        ListTile(
-          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('RTMP', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(flutter_live.FlutterLive.rtmp, style: TextStyle(color: Colors.grey[500])),
-          ]),
-          onTap: () => _onUserSelectUrl(flutter_live.FlutterLive.rtmp), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: flutter_live.FlutterLive.rtmp, groupValue: _url, onChanged: _onUserSelectUrl),
-        ),
-        ListTile(
-          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('HLS', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(flutter_live.FlutterLive.hls, style: TextStyle(color: Colors.grey[500])),
-          ]),
-          onTap: () => _onUserSelectUrl(flutter_live.FlutterLive.hls), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: flutter_live.FlutterLive.hls, groupValue: _url, onChanged: _onUserSelectUrl),
-        ),
-        ListTile(
-          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('HTTP-FLV', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(flutter_live.FlutterLive.flv, style: TextStyle(color: Colors.grey[500])),
-          ]),
-          onTap: () => _onUserSelectUrl(flutter_live.FlutterLive.flv), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: flutter_live.FlutterLive.flv, groupValue: _url, onChanged: _onUserSelectUrl),
-        ),
-        ListTile(
-          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('WebRTC', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(flutter_live.FlutterLive.rtc, style: TextStyle(color: Colors.grey[500], fontSize: 15)),
-          ]),
-          onTap: () => _onUserSelectUrl(flutter_live.FlutterLive.rtc), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: flutter_live.FlutterLive.rtc, groupValue: _url, onChanged: _onUserSelectUrl),
-        ),
-        ListTile(
-          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('HTTPS-FLV', style: TextStyle(fontWeight: FontWeight.bold)),
-            Container(
-              child: Text(flutter_live.FlutterLive.flvs, style: TextStyle(color: Colors.grey[500], fontSize: 15)),
-              padding: EdgeInsets.only(top: 3, bottom:3),
-            ),
-          ]),
-          onTap: () => _onUserSelectUrl(flutter_live.FlutterLive.flvs), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: flutter_live.FlutterLive.flvs, groupValue: _url, onChanged: _onUserSelectUrl),
-        ),
-        ListTile(
-          title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('HTTPS-HLS', style: TextStyle(fontWeight: FontWeight.bold)),
-            Container(
-              child: Text(flutter_live.FlutterLive.hlss, style: TextStyle(color: Colors.grey[500], fontSize: 14)),
-              padding: EdgeInsets.only(top: 3, bottom: 3),
-            ),
-          ]),
-          onTap: () => _onUserSelectUrl(flutter_live.FlutterLive.hlss), contentPadding: EdgeInsets.zero,
-          leading: Radio(value: flutter_live.FlutterLive.hlss, groupValue: _url, onChanged: _onUserSelectUrl),
-        ),
-      ]),
+    return Container(
+      child: _isPublish
+          ? Column(
+              children: [
+                ListTile(
+                  title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('RTMP',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(flutter_live.FlutterLive.rtmp_publish,
+                            style: TextStyle(color: Colors.grey[500])),
+                      ]),
+                  onTap: () =>
+                      _onUserSelectUrl!(flutter_live.FlutterLive.rtmp_publish),
+                  contentPadding: EdgeInsets.zero,
+                  leading: Radio(
+                      value: flutter_live.FlutterLive.rtmp_publish,
+                      groupValue: _url,
+                      onChanged: _onUserSelectUrl),
+                ),
+                ListTile(
+                  title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('RTMP',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(flutter_live.FlutterLive.rtmp_publish2,
+                            style: TextStyle(color: Colors.grey[500])),
+                      ]),
+                  onTap: () =>
+                      _onUserSelectUrl(flutter_live.FlutterLive.rtmp_publish2),
+                  contentPadding: EdgeInsets.zero,
+                  leading: Radio(
+                      value: flutter_live.FlutterLive.rtmp_publish2,
+                      groupValue: _url,
+                      onChanged: _onUserSelectUrl),
+                ),
+              ],
+            )
+          : Column(children: [
+              ListTile(
+                title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('RTMP',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(flutter_live.FlutterLive.rtmp,
+                          style: TextStyle(color: Colors.grey[500])),
+                    ]),
+                onTap: () => _onUserSelectUrl!(flutter_live.FlutterLive.rtmp),
+                contentPadding: EdgeInsets.zero,
+                leading: Radio(
+                    value: flutter_live.FlutterLive.rtmp,
+                    groupValue: _url,
+                    onChanged: _onUserSelectUrl),
+              ),
+              ListTile(
+                title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('HLS',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(flutter_live.FlutterLive.hls,
+                          style: TextStyle(color: Colors.grey[500])),
+                    ]),
+                onTap: () => _onUserSelectUrl!(flutter_live.FlutterLive.hls),
+                contentPadding: EdgeInsets.zero,
+                leading: Radio(
+                    value: flutter_live.FlutterLive.hls,
+                    groupValue: _url,
+                    onChanged: _onUserSelectUrl),
+              ),
+              ListTile(
+                title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('HTTP-FLV',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(flutter_live.FlutterLive.flv,
+                          style: TextStyle(color: Colors.grey[500])),
+                    ]),
+                onTap: () => _onUserSelectUrl!(flutter_live.FlutterLive.flv),
+                contentPadding: EdgeInsets.zero,
+                leading: Radio(
+                    value: flutter_live.FlutterLive.flv,
+                    groupValue: _url,
+                    onChanged: _onUserSelectUrl),
+              ),
+              ListTile(
+                title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('WebRTC',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(flutter_live.FlutterLive.rtc,
+                          style:
+                              TextStyle(color: Colors.grey[500], fontSize: 15)),
+                    ]),
+                onTap: () => _onUserSelectUrl!(flutter_live.FlutterLive.rtc),
+                contentPadding: EdgeInsets.zero,
+                leading: Radio(
+                    value: flutter_live.FlutterLive.rtc,
+                    groupValue: _url,
+                    onChanged: _onUserSelectUrl),
+              ),
+              ListTile(
+                title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('HTTPS-FLV',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Container(
+                        child: Text(flutter_live.FlutterLive.flvs,
+                            style: TextStyle(
+                                color: Colors.grey[500], fontSize: 15)),
+                        padding: EdgeInsets.only(top: 3, bottom: 3),
+                      ),
+                    ]),
+                onTap: () => _onUserSelectUrl!(flutter_live.FlutterLive.flvs),
+                contentPadding: EdgeInsets.zero,
+                leading: Radio(
+                    value: flutter_live.FlutterLive.flvs,
+                    groupValue: _url,
+                    onChanged: _onUserSelectUrl),
+              ),
+              ListTile(
+                title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('HTTPS-HLS',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Container(
+                        child: Text(flutter_live.FlutterLive.hlss,
+                            style: TextStyle(
+                                color: Colors.grey[500], fontSize: 14)),
+                        padding: EdgeInsets.only(top: 3, bottom: 3),
+                      ),
+                    ]),
+                onTap: () => _onUserSelectUrl!(flutter_live.FlutterLive.hlss),
+                contentPadding: EdgeInsets.zero,
+                leading: Radio(
+                    value: flutter_live.FlutterLive.hlss,
+                    groupValue: _url,
+                    onChanged: _onUserSelectUrl),
+              ),
+            ]),
     );
   }
 }
@@ -289,7 +377,8 @@ class ControlDisplay extends StatelessWidget {
   final bool _isPubslish;
   final bool _isPublishing;
   final ValueChanged<bool> _onSwitchPublish;
-  ControlDisplay(this._urlAvailable, this._onStartPlayOrPublish, this._isPubslish, this._isPublishing, this._onSwitchPublish);
+  ControlDisplay(this._urlAvailable, this._onStartPlayOrPublish,
+      this._isPubslish, this._isPublishing, this._onSwitchPublish);
 
   @override
   Widget build(BuildContext context) {
@@ -297,7 +386,7 @@ class ControlDisplay extends StatelessWidget {
       if (_isPublishing) {
         return 'Stop';
       }
-      return _isPubslish? 'Publish' : 'Play';
+      return _isPubslish ? 'Publish' : 'Play';
     };
 
     return Row(
@@ -311,9 +400,9 @@ class ControlDisplay extends StatelessWidget {
         ),
         Container(
           width: 120,
-          child:ElevatedButton(
+          child: ElevatedButton(
             child: Text(actionText()),
-            onPressed: _urlAvailable? _onStartPlayOrPublish : null,
+            onPressed: _urlAvailable ? _onStartPlayOrPublish : null,
           ),
         ),
       ],
@@ -321,33 +410,35 @@ class ControlDisplay extends StatelessWidget {
   }
 }
 
-class CameraDisplay extends StatelessWidget {
-  final bool _isPublish;
-  final camera.CameraController _cameraController;
-  CameraDisplay(this._isPublish, this._cameraController);
+// class CameraDisplay extends StatelessWidget {
+//   final bool _isPublish;
+//   final camera.CameraController _cameraController;
+//   CameraDisplay(this._isPublish, this._cameraController);
 
-  @override
-  Widget build(BuildContext context) {
-    if (!_isPublish) {
-      return Container();
-    }
+//   @override
+//   Widget build(BuildContext context) {
+//     if (!_isPublish) {
+//       return Container();
+//     }
 
-    if (_cameraController == null) {
-      return Container();
-    }
+//     if (_cameraController == null) {
+//       return Container();
+//     }
 
-    if (!_cameraController.value.isInitialized) {
-      return Container(child: Center(child: Text(
-        'Camera not available', style: TextStyle(color: Colors.red[500]),
-      )));
-    }
+//     if (!_cameraController.value.isInitialized) {
+//       return Container(
+//           child: Center(
+//               child: Text(
+//         'Camera not available',
+//         style: TextStyle(color: Colors.red[500]),
+//       )));
+//     }
 
-    return AspectRatio(
-        aspectRatio: _cameraController.value.aspectRatio,
-        child: camera.CameraPreview(_cameraController)
-    );
-  }
-}
+//     return AspectRatio(
+//         aspectRatio: _cameraController.value.aspectRatio,
+//         child: camera.CameraPreview(_cameraController));
+//   }
+// }
 
 class PlatformDisplay extends StatelessWidget {
   final PackageInfo _info;
@@ -361,10 +452,11 @@ class PlatformDisplay extends StatelessWidget {
         Text.rich(
           TextSpan(
             text: 'SRS/v${_info.version}+${_info.buildNumber}',
-            recognizer: TapGestureRecognizer() ..onTap = () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs.setBool("login", false);
-            },
+            recognizer: TapGestureRecognizer()
+              ..onTap = () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setBool("login", false);
+              },
           ),
         ),
       ],
@@ -381,16 +473,17 @@ class LiveStreamingPlayer extends StatefulWidget {
 }
 
 class _LiveStreamingPlayerState extends State<LiveStreamingPlayer> {
-  final flutter_live.RealtimePlayer _player = flutter_live.RealtimePlayer(fijkplayer.FijkPlayer());
+  final flutter_live.RealtimePlayer _player =
+      flutter_live.RealtimePlayer(fijkplayer.FijkPlayer());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('SRS Live Streaming')),
       body: fijkplayer.FijkView(
-          player: _player.fijk, panelBuilder: fijkplayer.fijkPanel2Builder(),
-          fsFit: fijkplayer.FijkFit.fill
-      ),
+          player: _player.fijk,
+          panelBuilder: fijkplayer.fijkPanel2Builder(),
+          fsFit: fijkplayer.FijkFit.fill),
     );
   }
 
@@ -430,9 +523,11 @@ class _WebRTCStreamingPlayerState extends State<WebRTCStreamingPlayer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('SRS WebRTC Streaming')),
-      body: GestureDetector(onTap: _switchLoudspeaker, child: Container(
-          child: webrtc.RTCVideoView(_video), decoration: BoxDecoration(color: Colors.grey[500])
-      )),
+      body: GestureDetector(
+          onTap: _switchLoudspeaker,
+          child: Container(
+              child: webrtc.RTCVideoView(_video),
+              decoration: BoxDecoration(color: Colors.grey[500]))),
     );
   }
 
@@ -449,7 +544,9 @@ class _WebRTCStreamingPlayerState extends State<WebRTCStreamingPlayer> {
     // Render stream when got remote stream.
     _player.onRemoteStream = (webrtc.MediaStream stream) {
       // @remark It's very important to use setState to set the srcObject and notify render.
-      setState(() { _video.srcObject = stream; });
+      setState(() {
+        _video.srcObject = stream;
+      });
     };
 
     // Auto start play WebRTC streaming.
@@ -457,7 +554,8 @@ class _WebRTCStreamingPlayerState extends State<WebRTCStreamingPlayer> {
   }
 
   void _switchLoudspeaker() {
-    print('setSpeakerphoneOn: $_loudspeaker(${_loudspeaker? "Loudspeaker":"Earpiece"})');
+    print(
+        'setSpeakerphoneOn: $_loudspeaker(${_loudspeaker ? "Loudspeaker" : "Earpiece"})');
     flutter_live.FlutterLive.setSpeakerphoneOn(_loudspeaker);
     _loudspeaker = !_loudspeaker;
   }
@@ -469,4 +567,3 @@ class _WebRTCStreamingPlayerState extends State<WebRTCStreamingPlayer> {
     _player.dispose();
   }
 }
-
